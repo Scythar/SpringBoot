@@ -31,6 +31,8 @@ public class AuthController {
     @Autowired
     private AuthUserService authService;
 
+
+
     //In Spring, every request firstly goes into jwtFilter and sees whether I have to filter it according to 'ShouldNotFilter' method
     // If skipped then request comes and authentication happens in controller class,
     @PostMapping("/auth/register")

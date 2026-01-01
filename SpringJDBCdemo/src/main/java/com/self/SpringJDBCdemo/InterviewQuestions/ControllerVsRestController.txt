@@ -44,3 +44,82 @@ Spring cannot convert object → JSON
 You’ll get HTTP 500 error
 ⭐ Quick Interview Summary Line (Memorize This)
 "@RestController automatically serializes the return object to JSON using HttpMessageConverters like Jackson, whereas @Controller is used for view-based MVC."
+
+<------------------------------------------------------------------------------------------------------------------>
+✅What is the difference between @RequestBody and @ModelAttribute?
+@RequestBody is used for REST APIs to deserialize JSON payloads, while @ModelAttribute is used in MVC to bind form and request parameters to a model object.
+
+@RequestBody
+Reads raw HTTP request body
+Uses HttpMessageConverters (Jackson)
+Converts JSON → Java object
+
+Example:
+@PostMapping("/users")
+public UserDTO create(@RequestBody UserDTO dto) { }
+Request:
+{
+  "name": "Nitesh",
+  "email": "nitesh@gmail.com"
+}
+✔ Used in REST APIs
+✔ JSON / XML payload
+✔ One-time deserialization
+
+
+@ModelAttribute
+Used mainly for MVC / web applications
+View name (JSP / Thymeleaf)
+Binds data from:
+Form data
+Query parameters
+Path parameters
+Uses Spring’s Data Binder
+Field-by-field binding
+
+Example:
+@PostMapping("/register")
+public String register(@ModelAttribute UserForm form) { }
+Form submission:
+name=Nitesh&email=nitesh@gmail.com
+✔ Used in MVC / form-based apps
+✔ Works even without JSON
+✔ Supports validation & default values
+
+<------------------------------------------------------------------------------------------------------------------>
+✅What is the difference between PUT and PATCH?
+PUT replaces the entire resource and is idempotent, whereas PATCH performs partial updates and is safer when only a few fields need to change.
+
+PUT
+Replaces the entire resource
+Client sends full representation
+Missing fields may be overwritten or null
+Idempotent (calling it multiple times gives same result)
+Example:
+PUT /users/10
+{
+  "name": "Nitesh",
+  "email": "nitesh@gmail.com",
+  "age": 28
+}
+✔ Used when client knows complete state
+✔ Common in internal APIs
+
+If some fields are missing in the JSON request body:
+No error is thrown
+Missing fields are set to:
+null for objects and 0 / false for primitives
+
+
+PATCH
+Updates only specific fields
+Client sends partial data
+Not guaranteed to be idempotent
+Safer for partial updates
+Example:
+PATCH /users/10
+{
+  "email": "newmail@gmail.com"
+}
+✔ Used when updating few fields only
+✔ Prevents accidental data loss
