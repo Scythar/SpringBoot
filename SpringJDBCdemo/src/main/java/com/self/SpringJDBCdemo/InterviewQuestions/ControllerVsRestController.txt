@@ -123,3 +123,30 @@ PATCH /users/10
 }
 ✔ Used when updating few fields only
 ✔ Prevents accidental data loss
+
+
+<------------------------------------------------------------------------------------------------------------------>
+✅What is idempotency?
+ Give real API examples where idempotency matters.
+
+ANSWER:
+Idempotency means performing the same operation multiple times produces the same final state as performing it once.
+
+This matters because retries, network failures, and duplicate events are normal in real systems.
+
+PUT API (Idempotent)
+PUT /users/10
+{
+  "email": "a@gmail.com"
+}
+Call once → email = a@gmail.com
+Call 10 times → still a@gmail.com
+
+⭐ 2. How to Implement Idempotency
+Use an Idempotency Key
+Client sends a unique key with each operation:
+idempotency-key: 12345
+Server stores:
+request → response mapping
+If same key arrives again → return stored result.
+Used in: Stripe, Razorpay, PayPal
