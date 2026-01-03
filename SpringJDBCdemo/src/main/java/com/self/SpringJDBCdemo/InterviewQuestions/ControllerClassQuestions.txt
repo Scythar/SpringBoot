@@ -150,3 +150,19 @@ Server stores:
 request → response mapping
 If same key arrives again → return stored result.
 Used in: Stripe, Razorpay, PayPal
+
+
+<------------------------------------------------------------------------------------------------------------------>
+✅Which HTTP methods are idempotent and which are not?
+Idempotent HTTP Methods
+HTTP Method	Idempotent	Reason
+GET	✅ Yes	Only reads data, no state change
+PUT	✅ Yes	Replaces entire resource with same state
+DELETE	✅ Yes	Deleting again has no further effect
+HEAD	✅ Yes	Same as GET but no body
+OPTIONS	✅ Yes	Metadata only
+
+Non-Idempotent HTTP Methods
+HTTP Method	Idempotent	Reason
+POST	❌ No	Creates new resource each time
+PATCH	❌ Not guaranteed	Depends on implementation

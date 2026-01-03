@@ -1,0 +1,26 @@
+✅What is JPA?
+
+ JPA (Java Persistence API) is a Java specification that defines how Java objects are mapped, stored, and retrieved from relational databases.
+ 👉 It provides a standard way to perform ORM (Object-Relational Mapping) in Java applications.
+ JPA is a specification, not an implementation
+
+✅What is Hibernate?
+ 
+ Hibernate is an ORM (Object–Relational Mapping) framework for Java.
+ 👉 It implements JPA and provides the actual working code that:
+ Maps Java objects to database tables
+ Handles SQL generation
+ Manages database operations automatically
+ 
+ What problem does Hibernate solve?
+ Without Hibernate (JDBC style)
+ Write SQL manually
+ Map ResultSet to Java objects
+ Handle connections, transactions, exceptions
+ With Hibernate
+ Work with Java objects only
+ Hibernate handles:
+ SQL
+ Table mapping
+ Insert / Update / Delete
+ Transactions
