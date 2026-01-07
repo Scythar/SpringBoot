@@ -1,0 +1,263 @@
+Question:
+Which design patterns have you applied most often in your projects and why? Expected:
+Singleton, Factory, Builder, Observer, Strategy— with practical examples.
+
+ANSWER:
+/*
+========================================================
+DESIGN PATTERNS USED IN MICROSERVICES (JAVA + SPRING BOOT)
+========================================================
+*/
+
+/*
+--------------------------------------------------------
+1. SINGLETON PATTERN
+--------------------------------------------------------
+Usage:
+- When only ONE instance of a class should exist
+- Used for shared business logic and configuration
+
+Real-world usage:
+- @Service
+- @Repository
+- @Component
+(Spring beans are Singleton by default)
+*/
+
+@Service
+public class OrderService {
+
+    public void placeOrder() {
+        System.out.println("Order placed successfully");
+    }
+}
+
+
+/*
+--------------------------------------------------------
+2. FACTORY PATTERN
+--------------------------------------------------------
+Usage:
+- When object creation depends on input or condition
+- Avoids scattered if-else logic
+
+Real-world usage:
+- Payment service selection
+- Notification service selection
+*/
+
+// Common interface
+public interface PaymentProcessor {
+    void pay();
+}
+
+// Implementation 1
+public class CardPayment implements PaymentProcessor {
+    public void pay() {
+        System.out.println("Processing card payment");
+    }
+}
+
+// Implementation 2
+public class UpiPayment implements PaymentProcessor {
+    public void pay() {
+        System.out.println("Processing UPI payment");
+    }
+}
+
+// Factory class
+@Component
+public class PaymentFactory {
+
+    public PaymentProcessor getProcessor(String type) {
+        if ("CARD".equalsIgnoreCase(type)) {
+            return new CardPayment();
+        }
+        if ("UPI".equalsIgnoreCase(type)) {
+            return new UpiPayment();
+        }
+        throw new IllegalArgumentException("Invalid payment type");
+    }
+}
+
+
+/*
+--------------------------------------------------------
+3. STRATEGY PATTERN
+--------------------------------------------------------
+Usage:
+- When multiple algorithms/business rules exist
+- Logic can change at runtime
+
+Real-world usage:
+- Discount calculation
+- Pricing logic
+- Validation rules
+*/
+
+// Strategy interface
+public interface DiscountStrategy {
+    double applyDiscount(double amount);
+}
+
+// Strategy 1
+@Component
+public class FestivalDiscountStrategy implements DiscountStrategy {
+    public double applyDiscount(double amount) {
+        return amount * 0.9;
+    }
+}
+
+// Strategy 2
+@Component
+public class NoDiscountStrategy implements DiscountStrategy {
+    public double applyDiscount(double amount) {
+        return amount;
+    }
+}
+
+// Context class
+@Service
+public class PricingService {
+
+    private final DiscountStrategy discountStrategy;
+
+    public PricingService(DiscountStrategy discountStrategy) {
+        this.discountStrategy = discountStrategy;
+    }
+
+    public double calculateFinalPrice(double amount) {
+        return discountStrategy.applyDiscount(amount);
+    }
+}
+
+
+/*
+--------------------------------------------------------
+4. BUILDER PATTERN
+--------------------------------------------------------
+Usage:
+- When object has many fields
+- Avoids constructor overloading
+- Supports immutability
+
+Real-world usage:
+- API response DTOs
+- Request objects
+*/
+
+public class OrderResponse {
+
+    private String orderId;
+    private String status;
+    private double amount;
+
+    private OrderResponse(Builder builder) {
+        this.orderId = builder.orderId;
+        this.status = builder.status;
+        this.amount = builder.amount;
+    }
+
+    public static class Builder {
+
+        private String orderId;
+        private String status;
+        private double amount;
+
+        public Builder orderId(String orderId) {
+            this.orderId = orderId;
+            return this;
+        }
+
+        public Builder status(String status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder amount(double amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        public OrderResponse build() {
+            return new OrderResponse(this);
+        }
+    }
+}
+
+// Usage
+OrderResponse response = new OrderResponse.Builder()
+        .orderId("ORD123")
+        .status("SUCCESS")
+        .amount(1000)
+        .build();
+
+
+/*
+--------------------------------------------------------
+5. OBSERVER PATTERN
+--------------------------------------------------------
+Usage:
+- One event triggers multiple actions
+- Loose coupling between components
+
+Real-world usage:
+- Kafka events
+- Email / SMS notifications
+- Audit logging
+*/
+
+// Event class
+public class OrderCreatedEvent {
+
+    private final String orderId;
+
+    public OrderCreatedEvent(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+}
+
+
+// Event publisher
+@Service
+public class OrderService {
+
+    private final ApplicationEventPublisher publisher;
+
+    public OrderService(ApplicationEventPublisher publisher) {
+        this.publisher = publisher;
+    }
+
+    public void createOrder(String orderId) {
+        publisher.publishEvent(new OrderCreatedEvent(orderId));
+    }
+}
+
+
+// Event listener
+@Component
+public class NotificationListener {
+
+    @EventListener
+    public void onOrderCreated(OrderCreatedEvent event) {
+        System.out.println("Sending notification for order " + event.getOrderId());
+    }
+}
+
+
+/*
+--------------------------------------------------------
+REAL-WORLD MICROSERVICE SUMMARY
+--------------------------------------------------------
+One microservice commonly uses multiple design patterns:
+- Singleton → Service & Repository beans
+- Factory → Object creation logic
+- Strategy → Business rule variations
+- Builder → DTO construction
+- Observer → Event-driven workflows
+This is standard practice in real-world production systems.
+*/
