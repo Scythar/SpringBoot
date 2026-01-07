@@ -22,20 +22,11 @@ Real-world usage:
 - @Repository
 - @Component
 (Spring beans are Singleton by default)
-*/
-
-@Service
-public class OrderService {
-
-    public void placeOrder() {
-        System.out.println("Order placed successfully");
-    }
-}
 
 
-/*
 --------------------------------------------------------
 2. FACTORY PATTERN
+👉 Decides WHICH object to create at runtime
 --------------------------------------------------------
 Usage:
 - When object creation depends on input or condition
@@ -44,55 +35,23 @@ Usage:
 Real-world usage:
 - Payment service selection
 - Notification service selection
-*/
-
-// Common interface
-public interface PaymentProcessor {
-    void pay();
-}
-
-// Implementation 1
-public class CardPayment implements PaymentProcessor {
-    public void pay() {
-        System.out.println("Processing card payment");
-    }
-}
-
-// Implementation 2
-public class UpiPayment implements PaymentProcessor {
-    public void pay() {
-        System.out.println("Processing UPI payment");
-    }
-}
-
-// Factory class
-@Component
-public class PaymentFactory {
-
-    public PaymentProcessor getProcessor(String type) {
-        if ("CARD".equalsIgnoreCase(type)) {
-            return new CardPayment();
-        }
-        if ("UPI".equalsIgnoreCase(type)) {
-            return new UpiPayment();
-        }
-        throw new IllegalArgumentException("Invalid payment type");
-    }
-}
+- file parser excel/csv/json
+- Multiple authentication mechanisms JWT / OAuth / SAML
+- Logging Framework Selection Log4j / Logback / Splunk
 
 
-/*
 --------------------------------------------------------
 3. STRATEGY PATTERN
+👉 Decides WHICH algorithm/behavior/business logic to execute at runtime
 --------------------------------------------------------
 Usage:
 - When multiple algorithms/business rules exist
 - Logic can change at runtime
 
 Real-world usage:
-- Discount calculation
-- Pricing logic
-- Validation rules
+- Discount calculation - Normal price, Festival discount, Employee discount, Coupon-based discount
+- Authentication & Authorization - JWT / OAuth / SAML / API key authentication
+- Payment Routing Logic - fastest / cheapest / reliable
 */
 
 // Strategy interface
