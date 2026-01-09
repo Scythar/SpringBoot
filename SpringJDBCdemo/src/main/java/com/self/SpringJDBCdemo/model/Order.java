@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
-public class OrderJPA {
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +17,7 @@ public class OrderJPA {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)  //"Load only when needed" //proxies (fake placeholder objects). // will only be invoked when user.getUser() is called
     @JoinColumn(name = "user_id", nullable = false)       // creating a column in orders table //JPA ALWAYS maps foreign keys to the primary key of the target entity unless otherwise stated using @MapsId
-    private UserJPA user;       //FK to primary key of UserJPA table
+    private User user;       //FK to primary key of User table
 
     //Default behavior differs by relation type:
     //
@@ -30,11 +30,11 @@ public class OrderJPA {
     //@ManyToMany → LAZY by default
 
     @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "order", //It tells Hibernate that the foreign key for this relationship is NOT in this entity (OrderJPA), but in the child entity (OrderItemJPA) inside the field named 'order'.
+            mappedBy = "order", //It tells Hibernate that the foreign key for this relationship is NOT in this entity (Order), but in the child entity (OrderItem) inside the field named 'order'.
     cascade = CascadeType.ALL,  //cascade = CascadeType.ALL tells Hibernate: “Whenever you perform an operation on the parent, automatically apply the same operation to the children.”
             orphanRemoval = true // it means if parent entry is deleted, then associated FK items in child will also get deleted.
     )
-    private List<OrderItemJPA> items = new ArrayList<>();
+    private List<OrderItem> items = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "orders_products",
@@ -43,20 +43,20 @@ public class OrderJPA {
     )
     private List<Product> products = new ArrayList<>();
 
-    public List<OrderItemJPA> getItems() {
+    public List<OrderItem> getItems() {
         return items;
     }
 
-    public void setItems(List<OrderItemJPA> items) {
+    public void setItems(List<OrderItem> items) {
         this.items = items;
     }
 
-    public void addItem(OrderItemJPA item){
+    public void addItem(OrderItem item){
         items.add(item);
         item.setOrder(this);
     }
 
-    public void removeItem(OrderItemJPA item){
+    public void removeItem(OrderItem item){
         items.remove(item);
         item.setOrder(null);
     }
@@ -77,11 +77,11 @@ public class OrderJPA {
         this.description = description;
     }
 
-    public UserJPA getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(UserJPA user) {
+    public void setUser(User user) {
         this.user = user;
     }
 

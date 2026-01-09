@@ -3,9 +3,9 @@ package com.self.SpringJDBCdemo.service;
 import com.self.SpringJDBCdemo.dto.LoginRequest;
 import com.self.SpringJDBCdemo.dto.LoginResponse;
 import com.self.SpringJDBCdemo.model.AuthUser;
-import com.self.SpringJDBCdemo.model.UserJPA;
+import com.self.SpringJDBCdemo.model.User;
 import com.self.SpringJDBCdemo.repository.AuthUserRepository;
-import com.self.SpringJDBCdemo.repository.UserJPARepository;
+import com.self.SpringJDBCdemo.repository.UserRepository;
 import com.self.SpringJDBCdemo.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,18 +26,18 @@ public class AuthUserService {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private UserJPARepository userJPARepository;
+    private UserRepository userRepository;
 
     public void registerUser(AuthUser authUser) {
         authUserRepository.save(authUser);
 
-        UserJPA user = new UserJPA();
+        User user = new User();
         user.setId(authUser.getId());              // 🔥 SAME ID
         user.setUsername(authUser.getUsername());
         user.setName(authUser.getUsername());      // or from request
         user.setAge(0);
 
-        userJPARepository.save(user);
+        userRepository.save(user);
     }
 
     public LoginResponse login(LoginRequest request) {

@@ -1,67 +1,47 @@
 package com.self.SpringJDBCdemo.repository;
 
-
-import com.self.SpringJDBCdemo.model.Users;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.self.SpringJDBCdemo.model.User;
+import com.self.SpringJDBCdemo.projection.UserNameProjection;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class UserRepository extends Users {
+    public interface UserRepository extends JpaRepository<User,Integer> {
 
-    @Autowired
-    private JdbcTemplate template;
+    Optional<User> findByName(String name);      //if multiple user exists with the same name, API will give 500 error
 
-    public int saveUser(Users user) {
-        String sql = "insert into users (name, age) values (?, ?)";
-        return template.update(sql,user.getName(),(user.getAge()));
-    }
+    Optional<User> findByUsername(String username);
 
-    public List<Users> fetchAllUsers() {
-        String sql = "select * from users";
+    List<User> findByAgeGreaterThan(int age);
 
-//RowMapper is a functional interface: so lambda expression is used directly inside query method
-        //public interface RowMapper<T> {
-        //    T mapRow(ResultSet rs, int rowNum) throws SQLException;
-        //}
-        return template.query(sql,(rs,rowNum) -> {
-            Users user = new Users();
-            user.setId(rs.getInt("id"));
-            user.setName(rs.getString("name"));
-            user.setAge(rs.getInt("age"));
-            return user;
-        });
-    }
+    List<User> findByAgeBetween(int start, int end);
 
-    public Users fetchUserById(int id) {
+    Optional<User> findByNameContaining(String text);    //if multiple user exists with the same name, API will give 500 error
 
-        String sql = "select * from users where id = ?";
-
-        try {
-            return template.queryForObject(sql, (rs, rowNum) -> {
-                Users user = new Users();
-                user.setId(rs.getInt("id"));
-                user.setName(rs.getString("name"));
-                user.setAge(rs.getInt("age"));
-                return user;
-            },id);
-        }
-        catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-    }
+    //JPQL(java persistent or Hibernate query language), which looks like SQL, but:
+    //✔ uses entity names (User) instead of table name 'users'
+    //✔ uses entity fields (age) instead of column name 'age'
+    //✔ Hibernate converts it into SQL for your database
+    @Query("SELECT u FROM User u WHERE u.age < :age")
+    List<User> getUsersAboveAge(@Param("age") int age);
 
 
-    public Object updateUser(int id, Users data) {
-        String sql = "update users set name = ?, age = ? where id = ?";
-        return template.update(sql,data.getName(),data.getAge(),id);
-    }
+    //nativeQuery = true means:
+    //Spring Data JPA will run the SQL query EXACTLY as you wrote it — as a raw SQL query, NOT as JPQL (Hibernate query language).
+    @Query(value = "select * from users where age > :age", nativeQuery = true)
+    List<User> ageGreaterThan(@Param("age") int age);
 
-    public Object deleteUser(int id) {
-        String sql = "delete from users where id = ?";
-        return template.update(sql,id);
-    }
+
+    //Projection (VERY IMPORTANT)
+    //Instead of returning whole entity, return only required fields.
+    //Example: Return only id + name:
+    @Query("SELECT u.id AS id, u.name AS name FROM User u")
+    List<UserNameProjection> getUserNames();
+
+
 }

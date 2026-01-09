@@ -1,10 +1,5 @@
 package com.self.SpringJDBCdemo.dto;
 
-import com.self.SpringJDBCdemo.model.OrderJPA;
-import jakarta.persistence.ManyToMany;
-
-import java.util.List;
-
 public class ProductResponseDTO {
     private int id;
 

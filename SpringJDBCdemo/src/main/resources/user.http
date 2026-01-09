@@ -3,33 +3,53 @@ GET http://localhost:8080/hello
 GET http://localhost:8080/hello/Nitesh
 
 ###
-POST http://localhost:8080/greet
+POST http://localhost:8080/user
 Content-Type: application/json
 
 {
-  "name": "Sitesh Singh",
+  "name": "Ram Verma",
   "age": 25
 }
 ###
-GET http://localhost:8080/users
+GET http://localhost:8080/user
 
 
 ###
-GET http://localhost:8080/users/2
+GET http://localhost:8080/user/3
 
 ###
-PUT http://localhost:8080/users/1
+PUT http://localhost:8080/user/3
 Content-Type: application/json
 
 {
-  "name": "UpdatedName",
+  "name": "Nitesh Singh",
   "age": 30
 }
 
 ###
-DELETE http://localhost:8080/users/1
+POST http://localhost:8080/order/user/3
+Content-Type: application/json
+
+{
+  "description": "third Order"
+}
 
 ###
-GET GET /users/6/orders
+GET http://localhost:8080/users/search?name=Nitesh Singh
+
+
+###
+GET http://localhost:8080/users/searchNameContaining?name=Singh
+
+###
+GET http://localhost:8080/users/searchByAge?minAge=18&maxAge=30
+
+###
+GET http://localhost:8080/users/searchAboveAge?age=20
+
+
+
+
+
 
 

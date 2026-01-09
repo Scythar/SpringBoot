@@ -5,7 +5,7 @@ import com.self.SpringJDBCdemo.dto.AddItemRequestDTO;
 import com.self.SpringJDBCdemo.dto.OrderItemDTO;
 import com.self.SpringJDBCdemo.dto.OrderRequestDTO;
 import com.self.SpringJDBCdemo.dto.OrderResponseDTO;
-import com.self.SpringJDBCdemo.service.OrderJPAService;
+import com.self.SpringJDBCdemo.service.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/order")
-public class OrderJPAController {
+public class OrderController {
 
     @Autowired
-    private OrderJPAService orderService;
+    private OrderService orderService;
 
     @GetMapping("/ping")
     public String ping(@AuthenticationPrincipal UserDetails userDetails) {

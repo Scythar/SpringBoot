@@ -3,10 +3,9 @@ package com.self.SpringJDBCdemo.controller;
 
 import com.self.SpringJDBCdemo.dto.ProductRequestDTO;
 import com.self.SpringJDBCdemo.dto.ProductResponseDTO;
-import com.self.SpringJDBCdemo.service.OrderJPAService;
+import com.self.SpringJDBCdemo.service.OrderService;
 import com.self.SpringJDBCdemo.service.ProductService;
 import jakarta.validation.Valid;
-import oracle.jdbc.proxy.annotation.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
 
     @Autowired
-    OrderJPAService orderService;
+    OrderService orderService;
 
     @Autowired private ProductService productService;
 

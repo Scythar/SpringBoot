@@ -6,14 +6,14 @@ import com.self.SpringJDBCdemo.dto.OrderRequestDTO;
 import com.self.SpringJDBCdemo.dto.OrderResponseDTO;
 import com.self.SpringJDBCdemo.exception.IdNotFoundException;
 import com.self.SpringJDBCdemo.exception.UserNotFoundException;
-import com.self.SpringJDBCdemo.model.OrderItemJPA;
-import com.self.SpringJDBCdemo.model.OrderJPA;
+import com.self.SpringJDBCdemo.model.Order;
+import com.self.SpringJDBCdemo.model.OrderItem;
 import com.self.SpringJDBCdemo.model.Product;
-import com.self.SpringJDBCdemo.model.UserJPA;
+import com.self.SpringJDBCdemo.model.User;
 import com.self.SpringJDBCdemo.repository.OrderItemRepository;
-import com.self.SpringJDBCdemo.repository.OrderJPARepository;
+import com.self.SpringJDBCdemo.repository.OrderRepository;
 import com.self.SpringJDBCdemo.repository.ProductRepository;
-import com.self.SpringJDBCdemo.repository.UserJPARepository;
+import com.self.SpringJDBCdemo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +30,9 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class OrderJPAService {
-    @Autowired private OrderJPARepository orderRepo;
-    @Autowired private UserJPARepository userRepo;
+public class OrderService {
+    @Autowired private OrderRepository orderRepo;
+    @Autowired private UserRepository userRepo;
     @Autowired private OrderItemRepository itemRepo;
     @Autowired private ModelMapper modelMapper;
     @Autowired private ProductRepository productRepo;
@@ -46,10 +46,10 @@ public class OrderJPAService {
     //DB modifying methods need @Transactional annotation
     public OrderResponseDTO createOrder(String username, OrderRequestDTO request) {
 
-        UserJPA user = userRepo.findByUsername(username)
+        User user = userRepo.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        OrderJPA order = new OrderJPA();
+        Order order = new Order();
         order.setDescription(request.getDescription());
         order.setUser(user);
 
@@ -61,14 +61,14 @@ public class OrderJPAService {
     @Transactional
     public OrderItemDTO addItem(int orderId, AddItemRequestDTO req, String username) {
 
-        OrderJPA order = orderRepo.findById(orderId)
+        Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new IdNotFoundException("Order not found"));
 
         if (!order.getUser().getUsername().equals(username)) {
             throw new AccessDeniedException("You do not own this order");
         }
 
-        OrderItemJPA item = new OrderItemJPA();
+        OrderItem item = new OrderItem();
         item.setProductName(req.getProductName());
         item.setQuantity(req.getQuantity());
         item.setPrice(req.getPrice());
@@ -82,7 +82,7 @@ public class OrderJPAService {
 
     public OrderResponseDTO getOrderWithItems(int orderId){
         // avoid N+1 by using fetch join (see below) OR @EntityGraph in repo
-        OrderJPA order = orderRepo.findById(orderId)
+        Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new IdNotFoundException("Order id not found"));
 
         OrderResponseDTO dto = modelMapper.map(order, OrderResponseDTO.class);
@@ -102,7 +102,7 @@ public class OrderJPAService {
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
 
-        Page<OrderJPA> result =
+        Page<Order> result =
                 orderRepo.findByUser_Username(username, pageable);
 
         return result.map(o -> modelMapper.map(o, OrderResponseDTO.class));
@@ -115,7 +115,7 @@ public class OrderJPAService {
             int productId,
             String username
     ) {
-        OrderJPA order = orderRepo.findById(orderId)
+        Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new IdNotFoundException("Order not found"));
 
         if (!order.getUser().getUsername().equals(username)) {
@@ -150,10 +150,10 @@ public class OrderJPAService {
 
     public OrderResponseDTO createFullOrder(CreateOrderDTO dto) {
 
-        UserJPA user = userRepo.findById(dto.getUserId())
+        User user = userRepo.findById(dto.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        OrderJPA order = new OrderJPA();
+        Order order = new Order();
         order.setDescription(dto.getDescription());
         order.setUser(user);
 
@@ -162,7 +162,7 @@ public class OrderJPAService {
 
         // now add items
         for(CreateOrderItemDTO itemDTO : dto.getItems()) {
-            OrderItemJPA item = new OrderItemJPA();
+            OrderItem item = new OrderItem();
             item.setProductName(itemDTO.getProductName());
             item.setQuantity(itemDTO.getQty());
             item.setOrder(order);
@@ -175,7 +175,7 @@ public class OrderJPAService {
 
 
     public OrderResponseDTO getOrderForUser(int orderId, String username) {
-        OrderJPA order = orderRepo.findById(orderId)
+        Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
         if (!order.getUser().getUsername().equals(username)) {

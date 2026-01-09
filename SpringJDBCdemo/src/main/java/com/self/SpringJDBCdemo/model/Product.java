@@ -18,7 +18,7 @@ public class Product {
     private double price;
 
     @ManyToMany(mappedBy = "products")
-    private List<OrderJPA> orders;
+    private List<Order> orders;
 
     public int getId() {
         return id;
@@ -44,11 +44,11 @@ public class Product {
         this.price = price;
     }
 
-    public List<OrderJPA> getOrders() {
+    public List<Order> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<OrderJPA> orders) {
+    public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
 }

@@ -48,6 +48,8 @@ SQL2 committed immediately
 SQL3 committed immediately
 If SQL3 fails → SQL1 and SQL2 are already saved → ❌ inconsistent state.
 
+Generally @Transactional annotation is used only for DB update query methods in service class.
+
 <--------------------------------------------------------------------------------------------------------------------->
 QUESTION:
 what happens if a method inside a transactional class is marked as @Transactional(propagation = Propagation.REQUIRES_NEW)
