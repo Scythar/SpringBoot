@@ -2,6 +2,6 @@ POST http://localhost:8080/create/product
 Content-Type: application/json
 
 {
-  "name": "car",
+  "name": "Bike",
   "price": 750000
 }

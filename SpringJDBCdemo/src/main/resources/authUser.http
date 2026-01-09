@@ -18,6 +18,3 @@ Accept: application/json
   "username": "New",
   "password": "not"
 }
-
-### use of actuator
-GET http://localhost:8080/actuator/health
