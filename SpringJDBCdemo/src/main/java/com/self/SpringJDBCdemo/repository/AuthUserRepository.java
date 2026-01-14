@@ -11,5 +11,13 @@ public interface AuthUserRepository extends JpaRepository<AuthUser,Integer> {
     //AuthUser primary key is Id, who's data type is Integer
 
 
+    //here method naming is important because Spring Data JPA auto-generates the implementation at runtime
+    /*  find  → SELECT
+        By    → WHERE
+        Username -> AuthUser.username
+
+        // final = select * from location where username = ?
+     */
+    // although AuthUser.username but method name convention is camelcase so findByUsername
     Optional<AuthUser> findByUsername(String username);
 }
