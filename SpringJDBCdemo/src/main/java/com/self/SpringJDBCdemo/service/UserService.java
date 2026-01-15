@@ -17,13 +17,21 @@ import java.util.List;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    // Autowired annotation is only needed when there is more than one class constructor present here, but that not the case so it is not necessary.
+//    @Autowired
+    private final UserRepository userRepository;
 
-    @Autowired
-    private AuthUserRepository authUserRepository;
-    @Autowired
-    ModelMapper modelMapper;
+//    @Autowired
+    private final AuthUserRepository authUserRepository;
+//    @Autowired
+    final ModelMapper modelMapper;
+
+    public UserService(UserRepository userRepository, AuthUserRepository authUserRepository, ModelMapper modelMapper) {
+        this.userRepository = userRepository;
+        this.authUserRepository = authUserRepository;
+        this.modelMapper = modelMapper;
+    }
+
 
     public UserResponseDTO createUser(UserRequestDTO data) {
         User entity = modelMapper.map(data, User.class);

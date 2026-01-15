@@ -3,13 +3,8 @@ package com.self.SpringJDBCdemo.controller;
 
 import com.self.SpringJDBCdemo.dto.*;
 import com.self.SpringJDBCdemo.exception.UserNotFoundException;
-import com.self.SpringJDBCdemo.security.JwtUtil;
-import com.self.SpringJDBCdemo.security.SecurityConfig;
 import com.self.SpringJDBCdemo.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +13,12 @@ import java.util.List;
 @RestController
 public class UserController {
 
-    @Autowired
-    UserService userService;
+//    @Autowired
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
 
     @GetMapping("/user")
