@@ -5,17 +5,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
-//@ControllerAdvice is a global exception handling and controller-logic customization mechanism in Spring Boot.
-//It allows you to write code that applies to all controllers instead of repeating logic in every controller.
-//Handle exceptions thrown from any controller in one place.
+@RestControllerAdvice
+// @RestControllerAdvice provides global exception handling and
+// cross-cutting controller logic in Spring Boot.
+// It allows you to handle exceptions from controllers, services,
+// and repositories in one centralized place, instead of repeating
+// try-catch logic in everywhere like controller,service.
+
+// @RestControllerAdvice is used to:
+//Catch exceptions globally
+//and convert them into proper HTTP responses for your REST API.
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

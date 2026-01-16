@@ -21,6 +21,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    // Note - Getmapping should not have @ResquestBody, take values using @RequestParam
     @GetMapping("/ping")
     public String ping(@AuthenticationPrincipal UserDetails userDetails) {
         System.out.println(userDetails.getUsername());
