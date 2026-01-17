@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//JPA works with Java object model, not DB schema.
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -32,11 +32,12 @@ public class Order {
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "order", //It tells Hibernate that the foreign key for this relationship is NOT in this entity (Order), but in the child entity (OrderItem) inside the field named 'order'.
     cascade = CascadeType.ALL,  //cascade = CascadeType.ALL contains(REMOVE, PERSIST, MERGE, REFRESH, DETACH) tells Hibernate: “Whenever you perform an operation on the parent, automatically apply the same operation to the children.”
+            //It is put always on OneToMany side(Parent side), so that modifying/deleting parent must also change child.
             orphanRemoval = true // it means if one entry is removed at runtime from parent entity, then associated FK entry in child table will also get deleted.
                                 // orphanRemoval = true is used on the @OneToMany (parent) side only.
                                 //It does not make sense on the @ManyToOne (child) side. Similarly, for cascade attribute
     )
-    private List<OrderItem> items = new ArrayList<>();
+    private List<OrderItem> items = new ArrayList<>();      // datatype of the List<> tells the JPA which table has this mapping object.
 
     @ManyToMany
     @JoinTable(name = "orders_products",
