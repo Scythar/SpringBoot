@@ -60,3 +60,16 @@ Can replace any layer without rewriting the whole app
 Good for microservices growth
 
 <---------------------------------------------------------------------------------------------------------->
+⭐ What is the difference between Spring and SpringBoot?
+ANSWER:
+Spring is a massive ecosystem designed to simplify Java enterprise development. Its core philosophy is Dependency Injection (DI) and Inversion of Control (IoC).
+Manual Configuration: In a traditional Spring project, you have to manually configure almost everything—DataSources, Transaction Managers, View Resolvers—using either XML or Java @Configuration classes.
+Deployment: You typically need to set up and manage an external web server like Apache Tomcat or Glassfish to deploy your WAR file.
+Boilerplate Code: You need to write a lot of repetitive setup code before you can even run a "Hello World" application.
+
+
+Spring Boot (The Productivity Tool)
+Spring Boot is a module built on top of the Spring Framework. It doesn't replace Spring; it manages it for you.
+Auto-Configuration: This is the "magic" of Spring Boot. It looks at the dependencies on your classpath. If it sees spring-boot-starter-web, it automatically assumes you are building a web app and configures Tomcat and Spring MVC for you.
+
+
