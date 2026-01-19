@@ -1,0 +1,82 @@
+⭐ Optimistic vs Pessimistic Locking (JPA / Hibernate)
+
+ANSWER:
+1️⃣ Optimistic Locking: Assumes conflicts are rare and checks for conflicts only at commit/update time.
+No database lock while reading
+Uses a version check
+If data changed by another transaction → fails(ROLLBACK)
+
+Example:
+@Entity
+public class Product {
+
+    @Id
+    private Long id;
+
+    private int quantity;
+
+    @Version
+    private int version;
+}
+
+Flow:
+Tx A reads Product (version = 1)
+Tx B reads Product (version = 1)
+Tx A updates → version becomes 2
+Tx B tries to update → ❌ OptimisticLockException
+
+
+2️⃣ Pessimistic Locking: Assumes conflicts are common and locks data immediately.
+Database lock acquired when reading
+Other transactions wait or fail
+Uses SQL locks
+
+Example:
+@Service
+public class ProductService {
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Transactional
+    public Product getProductForUpdate(Long id) {
+        return entityManager.find(
+            Product.class,
+            id,
+            LockModeType.PESSIMISTIC_WRITE
+        );
+    }
+
+    @Transactional
+    public void updateQuantity(Long id, int qty) {
+        Product product = getProductForUpdate(id);
+        product.setQuantity(qty);
+    }
+}
+
+
+3️⃣ Side-by-Side Comparison (INTERVIEW GOLD)
+Aspect	                        Optimistic	                        Pessimistic
+Locking                     	No DB lock	                            DB lock
+When conflict detected	        At commit time	                        At read time
+Performance	                        High	                            Lower
+Blocking	                        ❌ No	                            ✅ Yes
+Deadlock risk	                    ❌ No	                            ✅ Yes
+Typical use	                    Read-heavy apps	                        Write-heavy apps
+JPA support	                        @Version	                        LockModeType
+
+
+
+4️⃣ When to use which?
+✅ Use Optimistic Locking when:
+Conflicts are rare
+High concurrency
+REST APIs
+Microservices
+Most web applications
+
+✅ Use Pessimistic Locking when:
+Conflicts are frequent
+Financial transactions
+Inventory updates
+Seat booking systems
