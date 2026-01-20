@@ -16,6 +16,9 @@ Key points:
 No query written by you
 Spring parses method name
 Internally generates JPQL
+Derived query methods (like findBy..., deleteBy...) are for: SELECT, DELETE
+
+❌ They cannot perform UPDATE.
 
 
 2️⃣ Typed Query (JPQL)

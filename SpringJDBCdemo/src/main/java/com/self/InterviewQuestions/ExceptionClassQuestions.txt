@@ -1,0 +1,1 @@
+⭐Once a RuntimeException is thrown, the method execution stops immediately.

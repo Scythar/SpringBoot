@@ -24,3 +24,27 @@
  Table mapping
  Insert / Update / Delete
  Transactions
+
+<---------------------------------------------------------------------------------------------------->
+⭐ Spring cannot inject database entities. Why?
+
+ANSWER:
+Spring can only inject BEANS
+
+Spring manages:Services, Repositories, Controllers
+Hibernate manages: Entities
+
+They live in different lifecycles.
+
+2️⃣ Why injecting an entity is conceptually wrong
+
+An entity:
+Represents row data
+Is created per request / per query
+Depends on runtime DB state
+
+If Spring injected an entity:
+Which row would it inject?
+Which ID?
+Which transaction?
+❌ That would be impossible.
