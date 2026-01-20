@@ -1,0 +1,75 @@
+What Is Unit Test:
+A unit test is a way to test the smallest parts of your code, such as individual methods or
+classes, to ensure they work as expected
+
+Why Unit Testing is Important:
+. Fast feedback: Unit tests are quick to run and can immediately tell you if something is broken.
+. Early bug detection: Catch bugs at the method level before they propagate.
+. Easier to maintain: They help ensure future changes don't break existing functionality.
+. Increases confidence: You can refactor your code with the confidence that everything still
+works.
+
+<---------------------------------------------------------------------------------------------------->
+this dependency will bring junit 5 and mockito alreayd in your project so that you can write test method smoothly.
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+
+<------------------------------------------------------------------------------------------------------------>
+⭐ What is the use of BeforeEach and BeforeAll in Junit?
+ANSWER:
+5️⃣ @BeforeEach (Most Common)
+What it does:
+Runs before each @Test method
+Typical uses:
+Initialize objects
+Reset variables
+Prepare fresh test data
+
+class ProductServiceTest {
+    ProductRequestDTO request;
+    @BeforeEach
+    void setUp() {
+        request = new ProductRequestDTO();
+        request.setName("Laptop");
+        request.setPrice(75000.0);
+    }
+    @Test
+    void testCreateProduct() {
+        // uses fresh request object
+    }
+    @Test
+    void testAnotherCase() {
+        // again uses fresh request object
+    }
+}
+
+
+6️⃣ @BeforeAll (Runs Only Once)
+What it does:
+Runs only once before all tests
+
+Important rule:
+Method must be static (JUnit 5 default)
+
+@BeforeAll
+static void init() {
+    System.out.println("Runs once");
+}
+Typical uses
+Expensive setup
+DB connection
+Test container startup
+One-time configuration
+
+7️⃣ Execution Order (Very Important)
+@BeforeAll   → runs once
+@BeforeEach  → runs before test 1
+@Test 1
+@BeforeEach  → runs before test 2
+@Test 2
+...
+
+
