@@ -1,3 +1,14 @@
+✅ What is restAPI?
+ANSWER:
+REST = Representational State Transfer
+API = Application Programming Interface
+
+Representational State Transfer (REST): This refers to the concept that when you request a resource (like a user or an image), the server "transfers" a "representation" of the current "state" of that resource (usually in JSON or XML format) to your machine.
+
+Application Programming Interface (API): This is the "contract" or set of rules that allows two pieces of software to talk to each other.
+
+
+<-------------------------------------------------------------------------------------------------------------->
 ✅ Difference Between @Controller and @RestController
 ANSWER:
 
