@@ -31,7 +31,7 @@ public class UserController {
 
 @RestController
 Used for REST APIs
-Automatically converts return object to JSON
+Automatically converts returned object to JSON
 No need for @ResponseBody annotation
 Equivalent to:
 @Controller

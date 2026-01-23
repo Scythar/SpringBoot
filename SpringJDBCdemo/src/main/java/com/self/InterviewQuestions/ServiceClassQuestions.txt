@@ -56,14 +56,14 @@ public class ProductService {
 
 
 3️⃣ Side-by-Side Comparison (INTERVIEW GOLD)
-Aspect	                        Optimistic	                        Pessimistic
-Locking                     	No DB lock	                            DB lock
-When conflict detected	        At commit time	                        At read time
-Performance	                        High	                            Lower
-Blocking	                        ❌ No	                            ✅ Yes
-Deadlock risk	                    ❌ No	                            ✅ Yes
-Typical use	                    Read-heavy apps	                        Write-heavy apps
-JPA support	                        @Version	                        LockModeType
+Aspect	                    |    Optimistic	              |          Pessimistic
+Locking                     |	No DB lock	              |              DB lock
+When conflict detected	    |   At commit time	          |              At read time
+Performance	                |      High	                  |          Lower
+Blocking	                |     ❌ No	                  |          ✅ Yes
+Deadlock risk	            |    ❌ No	                  |          ✅ Yes
+Typical use	                |  Read-heavy apps	          |              Write-heavy apps
+JPA support	                |   @Version	              |          LockModeType
 
 
 
