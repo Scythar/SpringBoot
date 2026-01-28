@@ -1,4 +1,4 @@
-Q1. In a real production-grade Spring Boot app, how do you structure your project packages and why?
+✅ In a real production-grade Spring Boot app, how do you structure your project packages and why?
 ANSWER:
 A good Spring Boot project follows layered architecture:
 1. controller/
@@ -71,5 +71,66 @@ Boilerplate Code: You need to write a lot of repetitive setup code before you ca
 Spring Boot (The Productivity Tool)
 Spring Boot is a module built on top of the Spring Framework. It doesn't replace Spring; it manages it for you.
 Auto-Configuration: This is the "magic" of Spring Boot. It looks at the dependencies on your classpath. If it sees spring-boot-starter-web, it automatically assumes you are building a web app and configures Tomcat and Spring MVC for you.
+
+<-------------------------------------------------------------------------------------------------------------->
+⭐ How traditional Spring handled the dependency injection?
+
+ANSWER:
+1️⃣in traditional Spring dependency was configured manually in applicationContext.xml file
+
+<beans>
+
+    <bean id="userRepository" class="com.app.UserRepository" />
+
+    <bean id="userService" class="com.app.UserService">
+        <property name="repository" ref="userRepository"/>
+    </bean>
+
+    <bean id="userController" class="com.app.UserController">
+        <property name="service" ref="userService"/>
+    </bean>
+
+</beans>
+
+2️⃣and then initialization of that bean into another class worked like below example.
+
+public class UserRepository {
+    public String findUser() {
+        return "User from DB";
+    }
+}
+public class UserService {
+    private UserRepository repository;
+
+    public void setRepository(UserRepository repository) {
+        this.repository = repository;
+    }
+
+    public String getUser() {
+        return repository.findUser();
+    }
+}
+
+3️⃣ Or using JAVA configuration class : create a class and annotate it using @Configuration and then declare the bean inside it.
+
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public UserRepository userRepository() {
+        return new UserRepository();
+    }
+
+    @Bean
+    public UserService userService() {
+        return new UserService(userRepository());
+    }
+
+    @Bean
+    public UserController userController() {
+        return new UserController(userService());
+    }
+}
+
 
 
