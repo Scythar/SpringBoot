@@ -1,22 +1,13 @@
 What is a Spring Bean? (Simple Explanation)
 
 A bean is just an object, but…
-
 👉 its lifecycle is managed by Spring, not by you.
-
 You normally create objects like:
-
 ModelMapper mapper = new ModelMapper();
-
-
 But when we say:
-
 Spring creates it
-
 Spring manages it
-
 Spring injects it
-
 Then that object becomes a Spring Bean.
 
 ⭐ So a bean is simply:
@@ -36,6 +27,17 @@ These get auto-detected.
 2️⃣ Methods annotated with @Bean inside a @Configuration class
 
 These are manually created beans (like ModelMapper).
+
+3️⃣ @Bean methods are NOT allowed to take random parameters
+Spring can only inject:
+other beans
+framework objects like ApplicationContext, HttpServletRequest,Authentication,AuthenticationManager
+
+@Bean
+public BCryptPasswordEncoder passwordEncoder(String password) { ... }❌
+public BCryptPasswordEncoder passwordEncoder(  ) { ... }✅
+
+
 
 
 

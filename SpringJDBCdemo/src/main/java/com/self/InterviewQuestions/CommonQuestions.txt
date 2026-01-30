@@ -133,4 +133,40 @@ public class AppConfig {
 }
 
 
+<-------------------------------------------------------------------------------------------------------------->
+⭐ Why constructor injection is preferred over @Autowired?
+
+ANSWER:
+Constructor injection is preferred because it makes dependencies mandatory, supports immutability, improves testability, and fails fast at startup.
+✅ 1. Makes dependencies mandatory
+With constructor injection:
+new UserService(null); // ❌ not allowed logically
+You cannot create the object without its dependencies.
+With field injection:
+new UserService(); // compiles fine, but broken object
+❗ Hidden dependency problem.
+
+✅ 2. Supports immutability (final fields)
+private final UserRepository userRepository;
+✔ Dependency cannot change
+✔ Thread-safe
+✔ Clean design
+Field injection ❌ cannot use final.
+
+✅ 3. Fail-fast behavior
+If dependency is missing:
+❌ Field injection → error appears later at runtime
+✅ Constructor injection → app fails during startup
+Failing early is always better.
+
+✅ 4. Easier unit testing (VERY IMPORTANT)
+Constructor injection:
+UserRepository mockRepo = mock(UserRepository.class);
+UserService service = new UserService(mockRepo);
+✔ No Spring context needed
+✔ Fast tests
+Field injection:
+Needs reflection or Spring test context
+Slower and messy
+
 

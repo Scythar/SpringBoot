@@ -107,8 +107,11 @@ Most used	                        ⭐⭐⭐⭐⭐	                ⭐⭐⭐⭐	 
 ✅ What is persistence context?
 
 ANSWER:
-A Persistence Context is a runtime environment where JPA manages entity instances, tracks their state, and synchronizes changes with the database.
-Persistence Context is a first-level cache and entity management space where JPA/Hibernate tracks and manages entity objects.
+It is a context managed by the EntityManager
+It stores managed entity instances
+All changes happen on in-memory entity objects
+If the same entity is requested again within the same transaction, Hibernate returns it from memory, not DB that's why it is called first-level cache.
+Actual SQL is executed later (flush/commit)
 
 Who creates and manages it?
 Created by EntityManager
@@ -241,4 +244,18 @@ Commit = Transaction is permanently saved
 
 Flush ❌ does not commit
 Rollback is still possible after flush
+
+<------------------------------------------------------------------------------------------------------------>
+⭐What is the difference between flush() and commit()?
+
+ANSWER:
+flush() indicates spring to synchronize the changes between persistence context and DB but still rollback of transaction is possible, where as commit() indicate the spring to commit the transaction and save the state. after commit() rollback is not possible.
+
+flush()
+Synchronizes persistence context → database
+Hibernate:
+Generates SQL
+Executes it
+Does NOT end the transaction
+Rollback is still possible
 

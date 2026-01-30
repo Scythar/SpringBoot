@@ -1,0 +1,135 @@
+1️⃣ Open Database tool window
+
+In IntelliJ IDEA
+👉 View → Tool Windows → Database
+
+2️⃣ Add a new Oracle data source
+
+Click ➕ (Add Data Source)
+
+Choose Oracle
+
+If Oracle driver is not present:
+
+IntelliJ will prompt “Download missing driver”
+
+Click Download
+
+3️⃣ Fill Oracle connection details
+
+Use SYS or SYSTEM first (to create schema).
+
+Field	Value
+Host	localhost
+Port	1521
+Service name	XEPDB1
+User	system
+Password	(your system password)
+
+⚠️ If using SYS, set:
+
+Role → SYSDBA
+
+Click Test Connection → must be Successful ✅
+Click OK
+
+PART B — Create schema (user) for SpringShield
+
+Now you are connected as SYSTEM.
+
+4️⃣ Open SQL Console
+
+Right-click the Oracle connection
+
+Click New → Query Console
+
+5️⃣ Create the SPRINGSHIELD schema
+
+Run this SQL:
+
+CREATE USER SPRINGSHIELD IDENTIFIED BY root;
+
+6️⃣ Grant required permissions (IMPORTANT)
+GRANT CONNECT, RESOURCE TO SPRINGSHIELD;
+GRANT CREATE TABLE, CREATE SEQUENCE TO SPRINGSHIELD;
+GRANT UNLIMITED TABLESPACE TO SPRINGSHIELD;
+
+
+✔ This allows Hibernate to create tables and sequences.
+
+7️⃣ Verify schema creation
+SELECT username, account_status
+FROM dba_users
+WHERE username = 'SPRINGSHIELD';
+
+
+Status should be:
+
+OPEN
+
+PART C — Connect IntelliJ directly as SPRINGSHIELD
+
+This is optional but very useful.
+
+8️⃣ Add another Oracle Data Source
+
+Again ➕ → Oracle
+
+Fill:
+
+Field	Value
+Host	localhost
+Port	1521
+Service name	XEPDB1
+User	SPRINGSHIELD
+Password	root
+
+Click Test Connection → Success ✅
+Click OK
+
+9️⃣ What you should see now
+
+Under the SPRINGSHIELD connection:
+
+Tables (empty initially)
+
+Sequences
+
+Views
+
+Hibernate will populate this automatically.
+
+PART D — Configure Spring Boot for Oracle (FINAL)
+
+Update your application.properties:
+
+# Oracle Database
+spring.datasource.url=jdbc:oracle:thin:@localhost:1521/XEPDB1
+spring.datasource.username=SPRINGSHIELD
+spring.datasource.password=root
+spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+
+# JPA / Hibernate
+spring.jpa.database-platform=org.hibernate.dialect.OracleDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.open-in-view=false
+
+# Disable H2
+spring.h2.console.enabled=false
+
+PART E — Run application and verify
+
+Start Spring Boot
+
+Watch logs:
+
+No ORA-01017
+
+Hibernate DDL executed
+
+Refresh Database window in IntelliJ
+
+You should see:
+
+SPRINGSHIELD.USERS

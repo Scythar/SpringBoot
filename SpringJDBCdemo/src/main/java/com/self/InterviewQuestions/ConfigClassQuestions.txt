@@ -1,0 +1,37 @@
+⭐ What is csrf in securityFilterChain() and when it should be disabled?
+
+ANSWER:
+Cross-Site Request Forgery is a security attack where:
+A malicious website tricks a logged-in user’s browser into sending an unauthorized request to a trusted website.
+
+The key point:
+The user is already authenticated
+The browser automatically sends cookies
+The server thinks the request is legitimate
+
+2️⃣ Simple real-life example 🧠
+Imagine:
+You are logged into bank.com
+Authentication is stored in a cookie
+Now you visit a malicious site:
+<img src="https://bank.com/transfer?amount=10000&to=hacker" />
+Your browser:
+Automatically sends bank cookies
+Bank server thinks you made the request
+💥 Money transferred without your intent
+That’s CSRF.
+
+When CSRF protection is REQUIRED
+✅ Web apps using:
+Session + cookies
+Browser forms
+Traditional MVC apps
+
+6️⃣ When CSRF can be DISABLED safely
+❌ Not needed when:
+No cookies used for auth
+Using JWT
+Tokens sent in Authorization header
+Stateless REST APIs
+That’s why we often do:
+http.csrf(csrf -> csrf.disable());
