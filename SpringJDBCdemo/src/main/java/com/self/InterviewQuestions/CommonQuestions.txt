@@ -165,7 +165,8 @@ UserRepository mockRepo = mock(UserRepository.class);
 UserService service = new UserService(mockRepo);
 ✔ No Spring context needed
 ✔ Fast tests
-Field injection:
+
+Field(@Autowired) injection:
 Needs reflection or Spring test context
 Slower and messy
 
