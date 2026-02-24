@@ -60,10 +60,29 @@ Can replace any layer without rewriting the whole app
 Good for microservices growth
 
 <---------------------------------------------------------------------------------------------------------->
+⭐ Difference between entity and model package?
+
+ANSWER:
+An entity:
+Is directly mapped to a database table
+Has @Entity annotation (in JPA)
+
+Use model when: You’re designing domain logic
+
+
+| `entity`                        | `model`                           |
+| ------------------------------- | --------------------------------- |
+| Represents DB table             | Represents business/domain object |
+| Usually used with JPA/Hibernate | Can be independent of DB          |
+| Persistence layer concept       | Business/domain layer concept     |
+
+
+
+<---------------------------------------------------------------------------------------------------------->
 ⭐ What is the difference between Spring and SpringBoot?
 ANSWER:
 Spring is a massive ecosystem designed to simplify Java enterprise development. Its core philosophy is Dependency Injection (DI) and Inversion of Control (IoC).
-Manual Configuration: In a traditional Spring project, you have to manually configure almost everything—DataSources, Transaction Managers, View Resolvers—using either XML or Java @Configuration classes.
+Manual Configuration: In a traditional Spring project, we have to manually configure almost everything—DataSources, Transaction Managers, View Resolvers—using either XML or Java @Configuration classes.
 Deployment: You typically need to set up and manage an external web server like Apache Tomcat or Glassfish to deploy your WAR file.
 Boilerplate Code: You need to write a lot of repetitive setup code before you can even run a "Hello World" application.
 
