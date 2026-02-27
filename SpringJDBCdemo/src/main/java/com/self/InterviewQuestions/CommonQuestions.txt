@@ -190,3 +190,17 @@ Needs reflection or Spring test context
 Slower and messy
 
 
+<-------------------------------------------------------------------------------------------------------------->
+⭐ Monolithic vs Microservices architecture?
+
+ANSWER:
+A monolithic application is built as a single, unified unit where all components (UI, business logic, database access) are tightly integrated and deployed together.
+
+A monolithic application is built as a single, unified unit where all components (UI, business logic, database access) are tightly integrated and deployed together.
+
+User Service
+Order Service
+Payment Service
+Notification Service
+
+

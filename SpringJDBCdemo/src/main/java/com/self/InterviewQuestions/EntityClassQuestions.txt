@@ -1,3 +1,16 @@
+<---------------------------------------------------------------------------------------------------->
+⭐What is Entity in Spring boot application?
+
+ANSWER:
+an entity is a Java class annotated with @Entity that represents a database table. It is managed by JPA/Hibernate and maps class fields to table columns.
+
+Spring Boot + Hibernate:
+Maps this class to a table
+Maps fields to columns
+Automatically handles CRUD operations
+Converts Java object ↔ database row
+
+<---------------------------------------------------------------------------------------------------->
 ✅What is JPA?
 
  JPA (Java Persistence API) is a Java specification that defines how Java objects are mapped, stored, and retrieved from relational databases.
@@ -5,13 +18,13 @@
  JPA is a specification, not an implementation
 
 ✅What is Hibernate?
- 
+
  Hibernate is an ORM (Object–Relational Mapping) framework for Java.
  👉 It implements JPA and provides the actual working code that:
  Maps Java objects to database tables
  Handles SQL generation
  Manages database operations automatically
- 
+
  What problem does Hibernate solve?
  Without Hibernate (JDBC style)
  Write SQL manually

@@ -1,4 +1,4 @@
-package strategy.strategy;
+package com.self.designPattern.strategy.strategy;
 
 public class FestivalDiscount implements DiscountStrategy {
     public double apply(double amount) {
