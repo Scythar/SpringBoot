@@ -190,7 +190,7 @@ Slower and messy
 
 
 <-------------------------------------------------------------------------------------------------------------->
-⭐ Monolithic vs Microservices architecture?
+✅ Monolithic vs Microservices architecture?
 
 ANSWER:
 A monolithic application is built as a single, unified unit where all components (UI, business logic, database access) are tightly integrated and deployed together.
@@ -202,4 +202,46 @@ Order Service
 Payment Service
 Notification Service
 
+<------------------------------------------------------------------------------------------------------------------->
+✅Git class from external library — how to @Autowire?
 
+// External library class (can't modify)
+class Git {
+    public void doMerge() {}
+    public void doCommit() {}
+}
+
+// Your class
+class ABC {
+    @Autowired
+    Git git;              // ❌ Won't work — Git is not a Spring Bean
+
+    public void doWork() {
+        git.doMerge();
+    }
+}
+
+ANSWER:
+@Configuration
+public class AppConfig {
+
+    @Bean                        // ✅ registers Git as a Spring Bean
+    public Git git() {
+        return new Git();        // manually create instance
+    }
+}
+
+// Now @Autowired works!
+@Service
+class ABC {
+    @Autowired
+    Git git;                     // ✅ Spring injects the bean
+
+    public void doWork() {
+        git.doMerge();
+    }
+}
+
+
+<-------------------------------------------------------------------------------------------------------------->
+✅
