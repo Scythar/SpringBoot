@@ -1,6 +1,5 @@
 ✅How Spring security and JWT works together?
 ANSWER:
-they are not competitors.
 They do different jobs and are usually used together.
 
 Without Spring Security, JWT is just a token.
