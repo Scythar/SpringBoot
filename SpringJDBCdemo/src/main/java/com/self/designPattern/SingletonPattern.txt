@@ -1,0 +1,18 @@
+Singleton Pattern
+
+Used when only one instance of a class should exist in the application.
+In Spring Boot, most beans are Singleton by default.
+
+@Service
+public class UserService {
+
+    public String getUser() {
+        return "User Data";
+    }
+}
+
+Here Spring creates only one instance of UserService and uses it throughout the application whether you import it into multiple controller classes.
+
+Example usage:
+@Autowired
+private UserService userService;

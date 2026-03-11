@@ -1,0 +1,69 @@
+Factory Pattern
+
+Used when object creation logic is separated from the client code.
+
+Example:
+
+public interface Notification {
+    void send();
+}
+public class EmailNotification implements Notification {
+    public void send() {
+        System.out.println("Sending Email");
+    }
+}
+public class SMSNotification implements Notification {
+    public void send() {
+        System.out.println("Sending SMS");
+    }
+}
+
+Factory class:
+
+public class NotificationFactory {
+
+    public static Notification createNotification(String type) {
+        if(type.equals("email"))
+            return new EmailNotification();
+        else
+            return new SMSNotification();
+    }
+}
+
+Usage:
+
+Notification notification = NotificationFactory.createNotification("email");
+notification.send();
+
+
+
+
+public interface Notification{
+public void send();
+
+}
+
+public class EmailNotification implements Notification{
+public void send(){
+System.out.println("Sending Email");
+}
+}
+
+public class SMSNotification implements Notification{
+public void send(){
+System.out.println("Sending SMS");
+}
+}
+
+public class NotificationFactory{
+public static Notification createNotification(String type){
+if(type.equals("email"))
+return new EmailNotification();
+else
+return new SMSNotification();
+}
+}
+
+Notification notify = new NotificationFactory().createNotification("email");
+notify.send();
+

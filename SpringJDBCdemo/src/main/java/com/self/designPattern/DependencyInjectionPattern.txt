@@ -1,0 +1,16 @@
+Dependency Injection Pattern
+
+Spring automatically injects dependencies instead of creating objects manually.
+
+@Service
+public class OrderService {
+
+    private final PaymentService paymentService;
+
+    @Autowired
+    public OrderService(PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
+}
+Where used in project:
+Service → Repository → Controller layers.

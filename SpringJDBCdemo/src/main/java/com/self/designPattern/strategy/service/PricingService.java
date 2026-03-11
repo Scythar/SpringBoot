@@ -1,6 +1,6 @@
-package strategy.service;
+package com.self.designPattern.strategy.service;
 
-import strategy.strategy.DiscountStrategy;
+import com.self.designPattern.strategy.strategy.DiscountStrategy;
 
 public class PricingService {
     private DiscountStrategy strategy;
