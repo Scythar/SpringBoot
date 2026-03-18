@@ -20,9 +20,10 @@ Click Download
 Use SYS or SYSTEM first (to create schema).
 
 Field	Value
+connection type    service name
 Host	localhost
 Port	1521
-Service name	XEPDB1
+Service name	XEPDB1   //note: PDB name(XEPDB1) could change based on oracle sql version
 User	system
 Password	(your system password)
 
