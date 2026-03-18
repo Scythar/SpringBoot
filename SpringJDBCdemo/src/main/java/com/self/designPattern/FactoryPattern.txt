@@ -32,38 +32,13 @@ public class NotificationFactory {
 
 Usage:
 
-Notification notification = NotificationFactory.createNotification("email");
-notification.send();
+public class Main {
 
+    public static void main(String[] args) {
 
+        Notification notification =
+                NotificationFactory.createNotification("email");
 
-
-public interface Notification{
-public void send();
-
+        notification.send();
+    }
 }
-
-public class EmailNotification implements Notification{
-public void send(){
-System.out.println("Sending Email");
-}
-}
-
-public class SMSNotification implements Notification{
-public void send(){
-System.out.println("Sending SMS");
-}
-}
-
-public class NotificationFactory{
-public static Notification createNotification(String type){
-if(type.equals("email"))
-return new EmailNotification();
-else
-return new SMSNotification();
-}
-}
-
-Notification notify = new NotificationFactory().createNotification("email");
-notify.send();
-

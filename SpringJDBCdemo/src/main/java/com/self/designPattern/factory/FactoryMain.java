@@ -1,6 +1,6 @@
 package com.self.designPattern.factory;
 
-import factory.service.PaymentService;
+import com.self.designPattern.factory.service.PaymentService;
 
 public class FactoryMain {
     public static void main(String[] args) {

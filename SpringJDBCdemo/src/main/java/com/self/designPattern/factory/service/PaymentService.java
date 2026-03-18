@@ -1,7 +1,7 @@
-package factory.service;
+package com.self.designPattern.factory.service;
 
-import factory.factory.PaymentFactory;
-import factory.payment.PaymentProcessor;
+import com.self.designPattern.factory.factory.PaymentFactory;
+import com.self.designPattern.factory.payment.PaymentProcessor;
 
 public class PaymentService {
     public void makePayment(String type, double amount) {

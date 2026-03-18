@@ -1,8 +1,8 @@
-package factory.factory;
+package com.self.designPattern.factory.factory;
 
-import factory.payment.CardPayment;
-import factory.payment.UpiPayment;
-import factory.payment.PaymentProcessor;
+import com.self.designPattern.factory.payment.CardPayment;
+import com.self.designPattern.factory.payment.UpiPayment;
+import com.self.designPattern.factory.payment.PaymentProcessor;
 
 public class PaymentFactory {
     public static PaymentProcessor getProcessor(String type) {
