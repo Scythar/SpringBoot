@@ -1,0 +1,81 @@
+Observer Pattern:
+Observer pattern defines a one-to-many relationship where multiple observers are notified automatically when the subject state changes. It helps achieve loose coupling between subject and observers.
+
+⭐Observer Interface & Implementations:
+interface Observer {
+    void update(String message);
+}
+
+class EmailSubscriber implements Observer {
+    private String name;
+
+    public EmailSubscriber(String name) {
+        this.name = name;
+    }
+
+    public void update(String message) {
+        System.out.println(name + " received email: " + message);
+    }
+}
+
+class SmsSubscriber implements Observer {
+    private String name;
+
+    public SmsSubscriber(String name) {
+        this.name = name;
+    }
+
+    public void update(String message) {
+        System.out.println(name + " received SMS: " + message);
+    }
+}
+
+⭐Subject Interface & Implementations:
+
+interface Subject {
+    void addObserver(Observer o);
+    void removeObserver(Observer o);
+    void notifyObservers();
+}
+
+
+class YouTubeChannel implements Subject {
+
+    private List<Observer> observers = new ArrayList<>();
+    private String latestVideo;
+
+    public void addObserver(Observer o) {
+        observers.add(o);
+    }
+
+    public void removeObserver(Observer o) {
+        observers.remove(o);
+    }
+
+    public void uploadVideo(String title) {
+        this.latestVideo = title;
+        notifyObservers();
+    }
+
+    public void notifyObservers() {
+        for (Observer o : observers) {
+            o.update("New video uploaded: " + latestVideo);
+        }
+    }
+}
+
+⭐Usage:
+public class Main {
+    public static void main(String[] args) {
+
+        YouTubeChannel channel = new YouTubeChannel();
+
+        Observer user1 = new EmailSubscriber("Nitesh");
+        Observer user2 = new SmsSubscriber("Amit");
+
+        channel.addObserver(user1);
+        channel.addObserver(user2);
+
+        channel.uploadVideo("Observer Pattern in Java");
+    }
+}

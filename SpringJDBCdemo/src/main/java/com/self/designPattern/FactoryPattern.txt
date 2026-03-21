@@ -3,7 +3,7 @@ Factory Pattern
 Used when object creation logic is separated from the client code.
 
 Example:
-
+⭐Interface & Implementations:
 public interface Notification {
     void send();
 }
@@ -18,7 +18,7 @@ public class SMSNotification implements Notification {
     }
 }
 
-Factory class:
+⭐Factory class:
 
 public class NotificationFactory {
 
@@ -30,7 +30,7 @@ public class NotificationFactory {
     }
 }
 
-Usage:
+⭐Usage:
 
 public class Main {
 

@@ -1,10 +1,10 @@
 package com.self.designPattern.observer.observer;
 
-public class EmailObserver implements Observer {
+public class SMSObserver implements Observer {
 
     String name;
 
-    public EmailObserver(String s){
+    public SMSObserver(String s){
         this.name = s;
     }
 
