@@ -14,29 +14,30 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 /*
-JWT authentication is STATELESS (memorize this)
+JWT authentication is STATELESS
 In JWT / token-based authentication:
 Server does NOT remember users
 Server does NOT remember login
 Every request must prove its identity again
 That proof = JWT token
- */
 
-// Any spring boot project which extends 'OncePerRequestFilter' abstract class, will be redirected all incoming request
-// to shouldNotFilter and doFilterInternal method.
-// Every HTTP request enters the Spring Security Filter Chain
-// This filter runs BEFORE the controller
-//
-// Client
-//   ↓
-// Spring Security Filter Chain
-//   ↓
-// DispatcherServlet
-//   ↓
-// Controller
-//
-// OncePerRequestFilter guarantees that this filter is executed
-// ONLY ONCE per request (important for security correctness)
+
+ Any spring boot project which extends 'OncePerRequestFilter' abstract class, will be redirected all incoming request
+ to shouldNotFilter and doFilterInternal method.
+ Every HTTP request enters the Spring Security Filter Chain
+ This filter runs BEFORE the controller
+
+ Client
+   ↓
+ Spring Security Filter Chain
+   ↓
+ DispatcherServlet
+   ↓
+ Controller
+
+ OncePerRequestFilter guarantees that this filter is executed
+ ONLY ONCE per request (important for security correctness)
+ */
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -167,7 +168,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
     /*
-        This method decides WHETHER this filter should run for a request.
+        This method decides WHETHER the filter should run for a request.
 
         We want to SKIP JWT validation ONLY for authentication endpoints
         like /auth/login and /auth/register.

@@ -244,4 +244,44 @@ class ABC {
 
 
 <-------------------------------------------------------------------------------------------------------------->
+✅What are different spring profile/modules/ecosystems?
+
+ANSWER:
+🔹 1. Spring Core
+Dependency Injection (DI)
+IoC Container
+🔹 2. Spring MVC (Web)
+Build REST APIs
+Controllers, RequestMapping
+🔹 3. Spring Boot
+Auto-configuration
+Embedded server (Tomcat)
+🔹 4. Spring Data (JPA)
+Database access
+Repositories
+ORM support
+🔹 5. Spring Security 🔐
+Authentication
+Authorization
+JWT, OAuth
+🔹 6. Spring AOP
+Cross-cutting concerns
+Logging, transactions
+🔹 7. Spring Cloud ☁️
+Microservices tools
+Config Server
+Service discovery (Eureka)
+API Gateway
+🔹 8. Spring Batch
+Batch processing (large data jobs)
+🔹 9. Spring WebFlux
+Reactive programming (non-blocking APIs)
+🔹 10. Spring Integration
+Messaging systems
+Kafka, RabbitMQ integration
+<-------------------------------------------------------------------------------------------------------------->
+✅
+<-------------------------------------------------------------------------------------------------------------->
+✅
+<-------------------------------------------------------------------------------------------------------------->
 ✅
