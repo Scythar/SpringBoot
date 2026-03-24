@@ -1,11 +1,11 @@
 package com.self.designPattern.factory;
 
-import com.self.designPattern.factory.service.PaymentService;
+import com.self.designPattern.factory.factory.NotificationFactory;
 
 public class FactoryMain {
     public static void main(String[] args) {
-        PaymentService service = new PaymentService();
-        service.makePayment("CARD", 1000);
-        service.makePayment("UPI", 500);
+        NotificationFactory notificationFactory = new NotificationFactory();
+        notificationFactory.createNotification("email");
+        notificationFactory.createNotification("sms");
     }
 }

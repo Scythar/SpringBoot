@@ -1,0 +1,73 @@
+✅Strategy Pattern
+
+Behavior Needs to Change at Runtime
+When the algorithm/behavior should be swappable on the fly without restarting or rewriting.
+
+// 1. Strategy Interface
+interface DiscountStrategy {
+    double applyDiscount(double price);
+}
+
+// 2. Concrete Strategies
+class NoDiscount implements DiscountStrategy {
+    public double applyDiscount(double price) {
+        return price;
+    }
+}
+
+class SeasonalDiscount implements DiscountStrategy {
+    public double applyDiscount(double price) {
+        return price * 0.80; // 20% off
+    }
+}
+
+class MemberDiscount implements DiscountStrategy {
+    public double applyDiscount(double price) {
+        return price * 0.70; // 30% off
+    }
+}
+
+
+
+// 3. Context — Shopping Cart
+class ShoppingCart {
+    private DiscountStrategy discountStrategy;
+
+    public ShoppingCart(DiscountStrategy discountStrategy) {
+        this.discountStrategy = discountStrategy;
+    }
+
+    public void setDiscountStrategy(DiscountStrategy discountStrategy) {
+        this.discountStrategy = discountStrategy;
+    }
+
+    public double checkout(double price) {
+        double finalPrice = discountStrategy.applyDiscount(price);
+        System.out.println("Final Price: ₹" + finalPrice);
+        return finalPrice;
+    }
+}
+
+// 4. Main
+public class DiscountMain {
+    public static void main(String[] args) {
+        ShoppingCart cart = new ShoppingCart(new NoDiscount());
+        cart.checkout(1000);   // ₹1000.0
+
+        cart.setDiscountStrategy(new SeasonalDiscount());
+        cart.checkout(1000);   // ₹800.0
+
+        cart.setDiscountStrategy(new MemberDiscount());
+        cart.checkout(1000);   // ₹700.0
+    }
+}
+```
+
+---
+
+## 📤 Output
+```
+Final Price: ₹1000.0
+Final Price: ₹800.0
+Final Price: ₹700.0
+Final Price: ₹850.0

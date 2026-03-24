@@ -1,6 +1,8 @@
 Factory Pattern
 
-Used when object creation logic is separated from the client code.
+I need an object but don't want to specify the exact class"
+Centralizes object creation logic. The client just asks for an object — Factory decides which one to create.
+use when Object creation logic is **complex or repetitive**
 
 Example:
 ⭐Interface & Implementations:

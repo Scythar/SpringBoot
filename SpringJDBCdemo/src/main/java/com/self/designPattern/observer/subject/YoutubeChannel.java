@@ -7,7 +7,7 @@ import java.util.List;
 
 public class YoutubeChannel implements Subject{
 
-    List<Observer>  list = new ArrayList<>();
+    List<Observer> list = new  ArrayList<>();
 
     @Override
     public void addObserver(Observer o) {
@@ -19,16 +19,16 @@ public class YoutubeChannel implements Subject{
         list.remove(o);
     }
 
-    public void uploadVideo(){
-        System.out.print("new video uploaded");
-        notifyObservers();
-    }
-
     @Override
     public void notifyObservers() {
-        for(Observer o:list){
-            o.update("new video updated" + o);
+        for (Observer o : list) {
+            o.update("new video uploaded");
         }
+    }
+
+    public void uploadVideo( int num){
+        System.out.println("uploading video number "+ num);
+        notifyObservers();
     }
 
 

@@ -1,7 +1,0 @@
-package observer.event;
-
-public class OrderEvent {
-    private final String id;
-    public OrderEvent(String id) { this.id = id; }
-    public String getId() { return id; }
-}

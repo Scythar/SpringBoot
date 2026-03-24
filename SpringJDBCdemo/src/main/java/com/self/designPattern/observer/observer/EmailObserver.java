@@ -4,12 +4,12 @@ public class EmailObserver implements Observer {
 
     String name;
 
-    public EmailObserver(String s){
-        this.name = s;
+    public EmailObserver(String name){
+        this.name = name;
     }
 
     @Override
     public void update(String message) {
-        System.out.println(name + "received email notification: " + message);
+        System.out.println(name+" received SMS notification: "+ message);
     }
 }

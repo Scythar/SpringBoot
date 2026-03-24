@@ -10,6 +10,6 @@ public class SMSObserver implements Observer {
 
     @Override
     public void update(String message) {
-        System.out.println(name + "received email notification: " + message);
+        System.out.println(name + "received SMS notification: " + message);
     }
 }
