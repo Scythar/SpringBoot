@@ -12,26 +12,27 @@ public class User {
     }
 
     public static class Builder {
-        private final String name;
+        private  String name;
         private int age;
         private String email;
 
-        public Builder(String name) {
+        public Builder name(String name) {
             this.name = name;
+            return this;        // return this means return same builder object
         }
 
         public Builder age(int age) {
             this.age = age;
-            return this;
+            return this;        // return this means return same builder object
         }
 
         public Builder email(String email) {
             this.email = email;
-            return this;
+            return this;        // return this means return same builder object
         }
 
         public User build() {
-            return new User(this);
+            return new User(this);      // return this means return same builder object to new User
         }
     }
 }
