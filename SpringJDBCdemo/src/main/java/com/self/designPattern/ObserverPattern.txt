@@ -2,80 +2,83 @@ Observer Pattern:
 Observer pattern defines a one-to-many relationship where multiple observers are notified automatically when the subject state changes. It helps achieve loose coupling between subject and observers.
 
 ⭐Observer Interface & Implementations:
-interface Observer {
+// Observer package
+public interface Observer {
     void update(String message);
 }
 
-class EmailSubscriber implements Observer {
-    private String name;
+public class EmailSubscriber implements Observer {
+    String name;
 
     public EmailSubscriber(String name) {
         this.name = name;
     }
 
+    @Override
     public void update(String message) {
-        System.out.println(name + " received email: " + message);
+        System.out.println(name + " : sending via Email : " + message);
     }
 }
 
-class SmsSubscriber implements Observer {
-    private String name;
+public class SmsSubscriber implements Observer {
+    String name;
 
     public SmsSubscriber(String name) {
         this.name = name;
     }
 
+    @Override
     public void update(String message) {
-        System.out.println(name + " received SMS: " + message);
+        System.out.println(name + " : sending via SMS : " + message);
     }
 }
 
-⭐Subject Interface & Implementations:
-
-interface Subject {
-    void addObserver(Observer o);
-    void removeObserver(Observer o);
-    void notifyObservers();
+// Subject package
+public interface Subject {
+    void addObserver(Observer o);       // ✅ Observer param
+    void removeObserver(Observer o);    // ✅ Observer param
+    void notifyObservers(String message); // ✅ renamed + message param
+    void upload(String videoTitle);     // ✅ String param
 }
 
+public class YoutubeChannel implements Subject {
+    List<Observer> list = new ArrayList<>();
 
-class YouTubeChannel implements Subject {
-
-    private List<Observer> observers = new ArrayList<>();
-    private String latestVideo;
-
-    public void addObserver(Observer o) {
-        observers.add(o);
+    @Override
+    public void addObserver(Observer o) {   // ✅ Observer not String
+        list.add(o);
     }
 
-    public void removeObserver(Observer o) {
-        observers.remove(o);
+    @Override
+    public void removeObserver(Observer o) { // ✅ Observer not String
+        list.remove(o);
     }
 
-    public void uploadVideo(String title) {
-        this.latestVideo = title;
-        notifyObservers();
+    @Override
+    public void upload(String videoTitle) {
+        System.out.println("New video uploaded: " + videoTitle);
+        notifyObservers(videoTitle);  // ✅ correct method name
     }
 
-    public void notifyObservers() {
-        for (Observer o : observers) {
-            o.update("New video uploaded: " + latestVideo);
+    @Override
+    public void notifyObservers(String message) {  // ✅ renamed from update()
+        for(Observer o : list) {
+            o.update(message);  // ✅ passing message
         }
     }
 }
 
-⭐Usage:
+// Main
 public class Main {
     public static void main(String[] args) {
+        YoutubeChannel yt = new YoutubeChannel();
 
-        YouTubeChannel channel = new YouTubeChannel();
+        Observer ob1 = new EmailSubscriber("Nitesh");
+        Observer ob2 = new SmsSubscriber("Ritesh");  // ✅ used SmsSubscriber too
 
-        Observer user1 = new EmailSubscriber("Nitesh");
-        Observer user2 = new SmsSubscriber("Amit");
+        yt.addObserver(ob1);   // ✅ correct method name
+        yt.addObserver(ob2);
 
-        channel.addObserver(user1);
-        channel.addObserver(user2);
-
-        channel.uploadVideo("Observer Pattern in Java");
+        yt.upload("Video #23");  // ✅ String not int
     }
 }
