@@ -11,7 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthUserService {
@@ -43,14 +48,33 @@ public class AuthUserService {
     public LoginResponse login(LoginRequest request) {
 
         try {
-            //At this point user is authenticated only for this request
+            // authenticationManager internally calls loadUserByUsername()
+            // and matches the password using PasswordEncoder
+            // At this point user is authenticated only for this request
             Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword()
+                    )
             );
 
-            //Token contains:
-            //username //issuedAt //expiry //signature
-            String token = jwtUtil.generateToken(request.getUsername());
+            // auth.getPrincipal() returns the authenticated UserDetails object
+            // which contains username and roles — NO DB call needed here ✅
+            UserDetails userDetails = (UserDetails) auth.getPrincipal();
+
+            // extract roles from authenticated UserDetails
+            // getAuthorities() returns ["ROLE_USER", "ROLE_ADMIN"] etc.
+            List<String> roles = userDetails.getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
+
+            // Token contains:
+            // username // roles // issuedAt // expiry // signature
+            String token = jwtUtil.generateToken(
+                    userDetails.getUsername(),  // ✅ username from UserDetails
+                    roles                       // ✅ roles from UserDetails
+            );
 
             return new LoginResponse(
                     token,
@@ -58,7 +82,7 @@ public class AuthUserService {
                     "Login successful"
             );
 
-            //if authentication fails, catch block throws error.
+            // if authentication fails, catch block throws error.
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Authentication failed: " + e.getMessage());

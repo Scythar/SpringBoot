@@ -11,6 +11,7 @@ public class ShoppingCart {
 
     public DiscountStrategy setDiscountStrategy(DiscountStrategy discountStrategy) {
         this.discountStrategy = discountStrategy;
+        return discountStrategy;
     }
 
     public double checkout(double price){

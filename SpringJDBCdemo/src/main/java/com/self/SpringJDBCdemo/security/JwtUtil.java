@@ -1,6 +1,7 @@
 package com.self.SpringJDBCdemo.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtUtil {
@@ -25,11 +27,12 @@ public class JwtUtil {
     /* ---------------------------------------
        Generate Token
        --------------------------------------- */
-    public String generateToken(String username) {
+    public String generateToken(String username, List<String> roles) {
         return Jwts.builder()
                 .setSubject(username)
+                .claim("roles", roles)  // ✅ roles embedded
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000)) // 1 hour
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -44,9 +47,21 @@ public class JwtUtil {
     /* ---------------------------------------
        Validate Token
        --------------------------------------- */
-    public boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token);  // throws if expired ✅
+            return true;
+        } catch (JwtException e) {
+            // covers:
+            // ExpiredJwtException      → token expired
+            // MalformedJwtException    → token tampered
+            // SignatureException       → wrong signature
+            // UnsupportedJwtException  → wrong token type
+            return false;
+        }
     }
 
     /* ---------------------------------------
@@ -69,5 +84,16 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    // extract roles from token
+    public List<String> extractRoles(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())  // new API ✅
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.get("roles", List.class);  // roles stored as claim ✅
     }
 }

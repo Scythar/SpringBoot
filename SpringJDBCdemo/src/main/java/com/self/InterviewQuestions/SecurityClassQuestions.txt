@@ -87,4 +87,68 @@ Stateless: Authentication rebuilt on every request
 
 
 <--------------------------------------------------------------------------------------------------------->
+✅Session vs JWT — Full Comparison
 
+ANSWER:
+### Session Based Flow
+```
+Login:
+User → sends credentials → Server
+     → validates → creates Session in DB/Memory
+     → returns Session ID (cookie)
+
+Every Request:
+User → sends Session ID
+     → Server → looks up Session in DB   ← DB hit every request ❌
+     → validates → processes request
+```
+
+### JWT Based Flow
+```
+Login:
+User → sends credentials → Server
+     → validates → creates JWT Token (signed)
+     → returns JWT Token
+
+Every Request:
+User → sends JWT Token
+     → Server → validates signature locally  ← NO DB hit ✅
+     → extracts user info from token
+     → processes request
+
+┌─────────────────────┬────────────────────────────────┬─────────────────────────────────────────┐
+│ Feature             │ Session Based                  │ JWT Based                               │
+├─────────────────────┼────────────────────────────────┼─────────────────────────────────────────┤
+│ DB hit per request  │ ✅ Yes — session lookup        │ ❌ No — token is self-contained         │
+│ Server memory       │ Stores all sessions            │ Stateless — nothing stored              │
+│ Scalability         │ ❌ Hard — sticky sessions      │ ✅ Easy — any server validates          │
+│ Microservices       │ ❌ Session sharing problem     │ ✅ Each service validates independently │
+│ Logout              │ ✅ Easy — delete session       │ ❌ Hard — token valid till expiry       │
+│ Token expiry        │ Server controls                │ Embedded in token                       │
+│ Storage             │ Server side                    │ Client side                             │
+└─────────────────────┴────────────────────────────────┴─────────────────────────────────────────┘
+<--------------------------------------------------------------------------------------------------------->
+✅ what is the use of refresh token?
+
+ANSWER:
+ACCESS token is short-lived, if an attacker gets it, the damage window will be small.
+where as refresh token is used to generate access token again before expiry so that client should
+not login again in the system.
+refresh token is stored in DB and matched only once when access token expires.
+new access token is generated and send back to the user.
+it is stored in DB so that if an attacker will get it, he may keep on generating access token
+and the damage window will be of 7days. to avoid it, we can delete referesh token anytime from DB
+even at logout time also.
+
+ACCESS TOKEN
+    ├── Short lived (15 min)
+    ├── Used on every request
+    ├── If stolen → damage window = only 15 min ✅
+    └── NOT stored in DB → stateless
+
+REFRESH TOKEN
+    ├── Long lived (7 days)
+    ├── Used ONLY when access token expires
+    ├── Generates new access token → user stays logged in ✅
+    ├── If stolen → attacker keeps generating access tokens for 7 days ❌
+    └── Stored in DB → so we can DELETE it anytime to stop attacker ✅

@@ -73,3 +73,12 @@ One-time configuration
 ...
 
 
+<------------------------------------------------------------------------------------------------------------>
+✅How do you perform integration testing?
+
+ANSWER:
+Integration testing verifies:
+Multiple components working together correctly
+(e.g., Controller + Service + DB + external APIs)
+
+I typically load the Spring context, use a test database, and simulate real API calls to validate the full flow from controller to database. I also handle external dependencies using mocks or test containers and ensure test isolation.

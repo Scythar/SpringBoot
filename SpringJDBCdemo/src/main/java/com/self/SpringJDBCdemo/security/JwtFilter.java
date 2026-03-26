@@ -7,14 +7,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /*
-JWT authentication is STATELESS
 In JWT / token-based authentication:
 Server does NOT remember users
 Server does NOT remember login
@@ -44,20 +48,14 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
-
     /*
         Flow inside this filter:
-
         1. Read Authorization header
         2. Extract JWT token
-        3. Extract username from token
-        4. Load UserDetails from DB
-        5. Validate token (signature + expiry)
-        6. Create Authentication object
-        7. Store Authentication in SecurityContext
-        8. Continue filter chain
+        3. Validate token (signature + expiry)
+        4. Create Authentication object
+        5. Store Authentication in SecurityContext
+        6. Continue filter chain
      */
     @Override
     protected void doFilterInternal(
@@ -67,6 +65,7 @@ public class JwtFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         // Authorization: Bearer <token>
+        // Token contains : username + roles + signature + expiry
         //Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaXRlc2giLCJpYXQiOjE3MTAwMDAwMDAsImV4cCI6MTcxMDAwMzYwMH0.Vp6y9H4kQnT5zRkL0wA1m8B9XyJp0Q
         String header = request.getHeader("Authorization");
 
@@ -103,12 +102,8 @@ public class JwtFilter extends OncePerRequestFilter {
                 if (username != null &&
                         SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                    // Load user details from database
-                    UserDetails userDetails =
-                            userDetailsService.loadUserByUsername(username);
-
                     // Validate token (username match + expiration + signature)
-                    boolean tokenValid = jwtUtil.validateToken(token, userDetails);
+                    boolean tokenValid = jwtUtil.validateToken(token);
 
                     if (tokenValid) {
 
@@ -116,11 +111,20 @@ public class JwtFilter extends OncePerRequestFilter {
                      This constructor with authorities MARKS the user
                      as authenticated for THIS REQUEST.
                      */
+                        // ✅ Correct order:
+                        // principal   = username (who is the user)
+                        // credentials = null (no password needed after JWT validation)
+                        // authorities = roles (what they can do)
+                        List<GrantedAuthority> authorities = jwtUtil.extractRoles(token)
+                                .stream()
+                                .map(SimpleGrantedAuthority::new)
+                                .collect(Collectors.toList());
+
                         UsernamePasswordAuthenticationToken authentication =
                                 new UsernamePasswordAuthenticationToken(
-                                        userDetails,
-                                        null,
-                                        userDetails.getAuthorities()
+                                        username,     // ✅ principal
+                                        null,         // ✅ credentials
+                                        authorities   // ✅ authorities
                                 );
 
                     /*
