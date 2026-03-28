@@ -139,18 +139,24 @@ QUESTION:
 what happens if a method inside a transactional class is marked as @Transactional(propagation = Propagation.REQUIRES_NEW)
 
 ANSWER:
+without REQUIRES_NEW, inner and outer methods share the same transaction, so if the main transaction fails,
+all changes including the inner method are rolled back. With REQUIRES_NEW, the inner method runs in a separate
+transaction and its changes are committed independently.
+
 ✅ What does REQUIRES_NEW mean?
 When a method is annotated with REQUIRES_NEW, Spring:
 Suspends the currently running transaction (if any)
 Starts a brand-new independent transaction
 When the method finishes → commits or rolls back independently
 Then resumes the original transaction
+
 ✅ Where is it useful?
 Logging events that must be saved even if main transaction fails
 Sending emails / audit logs
 Saving partial progress
 Retrying operations
 Compensating transactions
+
 ⭐ Complete Example
 Imagine an order placement process:
 ▶ Main flow (big transaction)
@@ -159,32 +165,7 @@ Deduct inventory
 Charge payment
 ▶ But you always want to save an audit log
 EVEN IF order creation fails.
-📌 Java Code Example
-@Service
-public class OrderService {
-    @Autowired
-    private PaymentService paymentService;
-    @Autowired
-    private AuditService auditService;
-    @Transactional
-    public void placeOrder(Order order) {
-        // MAIN TRANSACTION STARTS
-        // Step 1: save the order
-        saveOrder(order);
-        // Step 2: try payment
-        try {
-            paymentService.chargeCustomer(order);
-        } catch (Exception e) {
-            // Payment failed → order fails
-            // BUT AUDIT LOG MUST STILL BE SAVED
-            auditService.saveAuditLog("Payment failed for order " + order.getId());
-            throw e;
-        }
-        // Step 3: successful
-        auditService.saveAuditLog("Order placed successfully: " + order.getId());
-        // MAIN TRANSACTION COMMITS (unless an exception)
-    }
-}
+
 📌 Audit Service with REQUIRES_NEW
 @Service
 public class AuditService {
@@ -197,16 +178,15 @@ public class AuditService {
         auditLogRepository.save(log);
     }
 }
+
+
 ⭐ What happens step-by-step?
 Case 1 → PAYMENT FAILS
 Part	Transaction	Result
 placeOrder()	T1	Rolls back
 saveAuditLog()	T2 (NEW)	Commits successfully
 ➡ Audit success message is saved even though order failed.
-Case 2 → ORDER SUCCESS
-Both logs:
-"Order placed successfully…" → committed in T2
-Entire order logic → committed in T1
+
 🔥 Visual Transaction Flow
 placeOrder() -- starts Transaction T1
     |
@@ -218,4 +198,4 @@ placeOrder() -- starts Transaction T1
     |
 T1 rolls back
 
-Note: if T2 fails, does not mean T1 will also rollback. and if T1 fails, T1 is paused and
+Note: if T2 fails, does not mean T1 will also roll back. and vice versa

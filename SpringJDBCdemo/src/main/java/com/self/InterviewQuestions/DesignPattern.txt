@@ -1,222 +1,112 @@
-Question:
-Which design patterns have you applied most often in your projects and why? Expected:
-Singleton, Factory, Builder, Observer, Strategy— with practical examples.
+✅How to make Singleton design thread-safe? Suppose 2 API call reaches at the same time both need DB connection how will you ensure they are thread safe?
 
 ANSWER:
-/*
-========================================================
-DESIGN PATTERNS USED IN MICROSERVICES (JAVA + SPRING BOOT)
-========================================================
-*/
 
-/*
---------------------------------------------------------
-1. SINGLETON PATTERN
---------------------------------------------------------
-Usage:
-- When only ONE instance of a class should exist
-- Used for shared business logic and configuration
+thread safety is ensured by keeping beans stateless(no instance variable) and using connection pooling like HikariCP, where each request thread gets its own database connection.
 
-Real-world usage:
-- @Service
-- @Repository
-- @Component
-(Spring beans are Singleton by default)
+in spring boot application HikariCP does Database Connection Handling,and provides Each thread separate DB connection.
 
-
---------------------------------------------------------
-2. FACTORY PATTERN
-👉 Decides WHICH object to create at runtime
---------------------------------------------------------
-Usage:
-- When object creation depends on input or condition
-- Avoids scattered if-else logic
-
-Real-world usage:
-- Payment service selection
-- Notification service selection
-- file parser excel/csv/json
-- Multiple authentication mechanisms JWT / OAuth / SAML
-- Logging Framework Selection Log4j / Logback / Splunk
-
-
---------------------------------------------------------
-3. STRATEGY PATTERN
-👉 Decides WHICH algorithm/behavior/business logic to execute at runtime
---------------------------------------------------------
-Usage:
-- When multiple algorithms/business rules exist
-- Logic can change at runtime
-
-Real-world usage:
-- Discount calculation - Normal price, Festival discount, Employee discount, Coupon-based discount
-- Authentication & Authorization - JWT / OAuth / SAML / API key authentication
-- Payment Routing Logic - fastest / cheapest / reliable
-*/
-
-// Strategy interface
-public interface DiscountStrategy {
-    double applyDiscount(double amount);
-}
-
-// Strategy 1
-@Component
-public class FestivalDiscountStrategy implements DiscountStrategy {
-    public double applyDiscount(double amount) {
-        return amount * 0.9;
+public class UserService {
+    public User getUser() {
+        // no shared variables
     }
 }
+✔ No shared mutable data → no race condition
 
-// Strategy 2
-@Component
-public class NoDiscountStrategy implements DiscountStrategy {
-    public double applyDiscount(double amount) {
-        return amount;
-    }
+<----------------------------------------------------------------------------------------------->
+✅how to make singleton thread safe?
+
+ANSWER:
+🔷 1. What does “thread-safe Singleton” actually mean?
+It has 2 separate concerns:
+✅ (A) Only ONE instance is created: Even if multiple threads try to create it at the same time
+
+✅ (B) Safe access by multiple threads: Multiple threads can use the singleton without corrupting data
+
+🔷 2. Problem 1: Multiple instances creation ❌
+🚨 Issue:
+if (instance == null) {
+    instance = new Singleton();
 }
 
-// Context class
-@Service
-public class PricingService {
+👉 If 2 threads enter together:
 
-    private final DiscountStrategy discountStrategy;
+Both see instance == null
+Both create object ❌
+🔷 3. Solutions for Safe Singleton Creation
+✅ 1. Eager Initialization (Simplest)
+private static final Singleton instance = new Singleton();
 
-    public PricingService(DiscountStrategy discountStrategy) {
-        this.discountStrategy = discountStrategy;
+✔ Thread-safe
+✔ No multiple instances
+❌ Created even if not used
+
+✅ 2. Synchronized Method
+public static synchronized Singleton getInstance() {
+    if (instance == null) {
+        instance = new Singleton();
     }
-
-    public double calculateFinalPrice(double amount) {
-        return discountStrategy.applyDiscount(amount);
-    }
+    return instance;
 }
 
+✔ Safe
+❌ Slow (lock every time)
 
-/*
---------------------------------------------------------
-4. BUILDER PATTERN
---------------------------------------------------------
-Usage:
-- When object has many fields
-- Avoids constructor overloading
-- Supports immutability
+✅ 3. Double-Checked Locking (Most Popular)
+private static volatile Singleton instance;
 
-Real-world usage:
-- API response DTOs
-- Request objects
-*/
-
-public class OrderResponse {
-
-    private String orderId;
-    private String status;
-    private double amount;
-
-    private OrderResponse(Builder builder) {
-        this.orderId = builder.orderId;
-        this.status = builder.status;
-        this.amount = builder.amount;
-    }
-
-    public static class Builder {
-
-        private String orderId;
-        private String status;
-        private double amount;
-
-        public Builder orderId(String orderId) {
-            this.orderId = orderId;
-            return this;
-        }
-
-        public Builder status(String status) {
-            this.status = status;
-            return this;
-        }
-
-        public Builder amount(double amount) {
-            this.amount = amount;
-            return this;
-        }
-
-        public OrderResponse build() {
-            return new OrderResponse(this);
+public static Singleton getInstance() {
+    if (instance == null) {
+        synchronized (Singleton.class) {
+            if (instance == null) {
+                instance = new Singleton();
+            }
         }
     }
+    return instance;
 }
 
-// Usage
-OrderResponse response = new OrderResponse.Builder()
-        .orderId("ORD123")
-        .status("SUCCESS")
-        .amount(1000)
-        .build();
+✔ Thread-safe
+✔ Better performance
 
-
-/*
---------------------------------------------------------
-5. OBSERVER PATTERN
---------------------------------------------------------
-Usage:
-- One event triggers multiple actions
-- Loose coupling between components
-
-Real-world usage:
-- Kafka events
-- Email / SMS notifications
-- Audit logging
-*/
-
-// Event class
-public class OrderCreatedEvent {
-
-    private final String orderId;
-
-    public OrderCreatedEvent(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public String getOrderId() {
-        return orderId;
-    }
+✅ 4. Bill Pugh (Best Practice ⭐)
+private static class Holder {
+    private static final Singleton INSTANCE = new Singleton();
 }
 
-
-// Event publisher
-@Service
-public class OrderService {
-
-    private final ApplicationEventPublisher publisher;
-
-    public OrderService(ApplicationEventPublisher publisher) {
-        this.publisher = publisher;
-    }
-
-    public void createOrder(String orderId) {
-        publisher.publishEvent(new OrderCreatedEvent(orderId));
-    }
+public static Singleton getInstance() {
+    return Holder.INSTANCE;
 }
 
+✔ Lazy loading
+✔ Thread-safe
+✔ No synchronization overhead
 
-// Event listener
-@Component
-public class NotificationListener {
-
-    @EventListener
-    public void onOrderCreated(OrderCreatedEvent event) {
-        System.out.println("Sending notification for order " + event.getOrderId());
-    }
+✅ 5. Enum Singleton (Safest ⭐⭐⭐)
+public enum Singleton {
+    INSTANCE;
 }
 
+✔ Thread-safe
+✔ Prevents reflection & serialization issues
 
-/*
---------------------------------------------------------
-REAL-WORLD MICROSERVICE SUMMARY
---------------------------------------------------------
-One microservice commonly uses multiple design patterns:
-- Singleton → Service & Repository beans
-- Factory → Object creation logic
-- Strategy → Business rule variations
-- Builder → DTO construction
-- Observer → Event-driven workflows
-This is standard practice in real-world production systems.
-*/
+🔷 4. Problem 2: Thread-safe usage ❌
+
+Even if singleton is created safely:
+
+private int count;
+
+👉 Multiple threads can corrupt this
+
+✅ Solution:
+Keep singleton stateless
+OR use:
+synchronized
+AtomicInteger
+Immutable objects
+
+🔷 In Spring Boot (Real World)
+Spring beans are singleton by default
+Creation is already thread-safe ✔
+You only need to worry about:
+❌ Shared mutable state

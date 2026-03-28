@@ -1,0 +1,36 @@
+✅How does Redis work?
+
+ANSWER:
+Redis is not just key-value—it supports: String Hash List Set Sorted Set
+
+Redis uses single thread for commands
+Avoids:
+Locks
+Race conditions
+
+👉 Still handles thousands of requests/sec
+
+Where Redis is Used
+Caching (most common)
+Session storage
+Rate limiting
+Leaderboards
+Messaging
+
+
+@SpringBootApplication
+@EnableCaching                    // ← put it here
+public class MyApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(MyApplication.class, args);
+    }
+}
+
+@Cacheable(value = "users", key = "#id")
+public User getUser(Long id) {
+    return userRepository.findById(id);
+}
+
+TTL Configuration
+spring.cache.redis.time-to-live=60000

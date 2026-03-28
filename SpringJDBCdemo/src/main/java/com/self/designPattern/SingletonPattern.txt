@@ -1,7 +1,11 @@
 Singleton Pattern
 
-Used when only one instance of a class should exist in the application.
-In Spring Boot, most beans are Singleton by default.
+Singleton ensures a class has only one instance throughout the entire application, and provides a global access point to that instance. but that one instance can be used by multiple threads simultaneously.
+
+Some objects should only exist once:
+A database connection pool — you don't want 100 threads each creating their own pool
+A config manager — app config should be read once, shared everywhere
+A logger — one logging instance across the whole app
 
 @Service
 public class UserService {
