@@ -1,0 +1,118 @@
+<-------------------------------------------------------------------------------------------------->
+✅ what is bean conflict?  How to resolve bean conflicts in Spring Boot?
+
+ANSWER:
+A bean conflict happens when Spring's IoC container finds more than one bean of the same type and
+doesn't know which one to inject.
+
+// Two beans of same type — Spring is confused
+@Bean
+public DataSource mysqlDataSource() { ... }
+
+@Bean
+public DataSource postgresDataSource() { ... }
+
+// Now when something asks for DataSource — which one?
+@Autowired
+DataSource dataSource;  // ❌ NoUniqueBeanDefinitionException
+```
+
+Spring throws:
+```
+NoUniqueBeanDefinitionException:
+
+Situation                              │ Solution
+───────────────────────────────────────────────────────────────
+One bean is the most common default    │ @Primary
+Different classes need different beans │ @Qualifier
+Switch bean based on yml config        │ @ConditionalOnProperty
+Switch bean based on dev/prod env      │ @Profile
+
+
+
+☑️4 Ways to Resolve Bean Conflicts
+
+1. @Primary — Mark one bean as the default choice
+@Configuration
+public class DataSourceConfig {
+
+    @Bean
+    @Primary                        // ✅ this one wins by default
+    public DataSource mysqlDataSource() {
+        return new MySQLDataSource();
+    }
+
+    @Bean
+    public DataSource postgresDataSource() {
+        return new PostgresDataSource();
+    }
+}
+
+2. @Qualifier — Explicitly name which bean you want
+@Configuration
+public class DataSourceConfig {
+
+    @Bean("mysqlDataSource")            // named bean
+    public DataSource mysqlDataSource() {
+        return new MySQLDataSource();
+    }
+
+    @Bean("postgresDataSource")         // named bean
+    public DataSource postgresDataSource() {
+        return new PostgresDataSource();
+    }
+}
+
+@Service
+public class OrderService {
+
+    @Autowired
+    @Qualifier("mysqlDataSource")       // ✅ explicitly pick which one
+    DataSource dataSource;
+}
+
+3. @ConditionalOnProperty — Activate bean based on config
+java@Configuration
+public class PaymentConfig {
+
+    @Bean
+    @ConditionalOnProperty(name = "payment.provider", havingValue = "razorpay")
+    public PaymentGateway razorpayGateway() {
+        return new RazorpayGateway();
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "payment.provider", havingValue = "stripe")
+    public PaymentGateway stripeGateway() {
+        return new StripeGateway();
+    }
+}
+
+# application.yml
+payment:
+  provider: razorpay      # only RazorpayGateway bean is created
+
+
+4. @Profile — Activate bean based on active profile
+java@Configuration
+public class CacheConfig {
+
+    @Bean
+    @Profile("dev")                     // only in dev profile
+    public CacheManager simpleCacheManager() {
+        return new ConcurrentMapCacheManager();
+    }
+
+    @Bean
+    @Profile("prod")                    // only in prod profile
+    public CacheManager redisCacheManager() {
+        return new RedisCacheManager(...);
+    }
+}
+yaml# application.yml
+spring:
+  profiles:
+    active: dev     # simpleCacheManager is created, redisCacheManager is not
+
+
+

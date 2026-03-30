@@ -1,5 +1,5 @@
 QUESTION:
-What is the difference between fetch = FetchType.LAZY and FetchType.EAGER?
+    What is the difference between fetch = FetchType.LAZY and FetchType.EAGER?
 
 ANSWER:
 

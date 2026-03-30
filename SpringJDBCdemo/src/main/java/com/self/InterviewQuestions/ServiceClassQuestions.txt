@@ -43,14 +43,8 @@ public class ProductService {
         return entityManager.find(
             Product.class,
             id,
-            LockModeType.PESSIMISTIC_WRITE
+            LockModeType.PESSIMISTIC_WRITE   // pessimistic locking on DB
         );
-    }
-
-    @Transactional
-    public void updateQuantity(Long id, int qty) {
-        Product product = getProductForUpdate(id);
-        product.setQuantity(qty);
     }
 }
 
@@ -83,41 +77,30 @@ Seat booking systems
 
 <------------------------------------------------------------------------------------------------------------->
 ✅QUESTION:
-When a method annotated with @Transactional executes, Spring starts a database transaction before the method begins. what does it mean?
+When a method annotated with @Transactional executes, Spring starts a database transaction before
+the method begins. what does it mean?
 
 ANSWER:
-Assume you have:
 @Transactional
 public void updateUser() {
     userRepository.save(...);
 }
+
 Step-by-step explanation
 1️⃣ Spring opens a DB transaction BEFORE the method body runs
-Spring tells the database something like:
-BEGIN TRANSACTION;
-(or the equivalent depending on the DB vendor)
-This means:
 All SQL operations inside this method will now run inside one single atomic transaction.
-They will not be permanently saved until Spring issues a COMMIT.
-The important idea:
-➡️ The moment control enters the method, a transaction context already exists.
+
 2️⃣ All repository calls inside the method participate in THIS transaction
 Example:
 userRepo.save(user);   // part of the same transaction
 orderRepo.save(order); // same transaction
 If any of these fail → everything rolls back.
-3️⃣ After the method completes, Spring decides:
-✔ If no exception → Spring sends COMMIT
-DB now permanently saves:
-COMMIT;
-❌ If an exception occurs → Spring sends ROLLBACK
-DB discards all SQL operations:
-ROLLBACK;
+
 🔍 Why does Spring need to start the transaction before entering the method?
 Because:
 If you run multiple SQL updates, they must belong to the same atomic block.
 You cannot start/commit a transaction after some SQL has already executed.
-Spring must prepare the transactional context for the entire method.
+
 🧠 Example timeline
 With @Transactional:
 [Spring] BEGIN
@@ -199,3 +182,20 @@ placeOrder() -- starts Transaction T1
 T1 rolls back
 
 Note: if T2 fails, does not mean T1 will also roll back. and vice versa
+
+
+Propagation     │ TX exists               │ No TX exists         │ Use case
+────────────────────────────────────────────────────────────────────────────
+REQUIRED        │ Join existing TX        │ Create new TX        │ Default — most operations
+
+REQUIRES_NEW    │ Suspend current, new TX │ Create new TX        │ Audit logs, independent ops
+
+NESTED          │Create savepoint(same TX)│ Create new TX        │ Partial rollback (DB must support)
+
+SUPPORTS        │ Join existing TX        │ Run without TX       │ Read-only operations
+
+NOT_SUPPORTED   │ Suspend TX              │ Run without TX       │ Long reads, reporting
+
+MANDATORY       │ Join existing TX        │ ❌ Exception         │ Enforce transaction presence
+
+NEVER           │ ❌ Exception            │ Run without TX       │ Ensure no transaction context
