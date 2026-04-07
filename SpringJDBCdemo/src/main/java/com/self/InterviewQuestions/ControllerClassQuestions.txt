@@ -137,8 +137,7 @@ PATCH /users/10
 
 
 <------------------------------------------------------------------------------------------------------------------>
-✅What is idempotency?
- Give real API examples where idempotency matters.
+✅What is idempotency? Give real API examples where idempotency matters.
 
 ANSWER:
 Idempotency means performing the same operation multiple times produces the same final state as performing it once.
