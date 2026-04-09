@@ -11,9 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,6 +37,11 @@ public class AuthUserService {
     private UserRepository userRepository;
 
     public void registerUser(AuthUser authUser) {
+        String role = authUser.getRole() == null ? "" : authUser.getRole().trim().toUpperCase();
+        if (role.startsWith("ROLE_")) {
+            role = role.substring(5);
+        }
+        authUser.setRole(role);
         authUserRepository.save(authUser);
 
         User user = new User();
@@ -82,10 +90,12 @@ public class AuthUserService {
                     "Login successful"
             );
 
-            // if authentication fails, catch block throws error.
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Authentication failed: " + e.getMessage());
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Invalid username or password",
+                    e
+            );
         }
     }
 }

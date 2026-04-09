@@ -3,7 +3,7 @@
 #############################################
 
 @baseUrl = http://localhost:8080
-@jwt_token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJOZXciLCJpYXQiOjE3Njc5NDc2NzMsImV4cCI6MTc2Nzk1MTI3M30.yiw9n-FiVGC6tMIWdFGw0LRQrUbMH_KdUnG_X6mkUZ0
+@jwt_token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzc1NzE1NDg2LCJleHAiOjE3NzU3MTkwODZ9.GwSgFy1t2eOx2DicgINT2LcF4zu3qua-6kjgBGzxjQo
 
 ############################################
 GET http://localhost:8080/order/ping

@@ -86,6 +86,25 @@ Manual Configuration: In a traditional Spring project, we have to manually confi
 Deployment: You typically need to set up and manage an external web server like Apache Tomcat or Glassfish to deploy your WAR file.
 Boilerplate Code: You need to write a lot of repetitive setup code before you can even run a "Hello World" application.
 
+DataSource = connection factory to your database
+Spring uses it to:
+  → Create DB connections
+  → Manage connection pool (HikariCP by default)
+  → Give connections to repositories/JPA
+
+Transaction Manager = controls DB transactions
+Ensures:
+  → All operations succeed together (COMMIT)
+  → OR all fail together (ROLLBACK)
+  → ACID properties maintained
+
+View Resolver = maps controller return value to actual view/template
+Controller returns "home"
+      ↓
+View Resolver resolves it to
+      ↓
+/templates/home.html  (Thymeleaf)
+/WEB-INF/views/home.jsp  (JSP)
 
 Spring Boot (The Productivity Tool)
 Spring Boot is a module built on top of the Spring Framework that makes it easy to create standalone, production-ready applications with minimal configuration. It looks at the dependencies on your classpath. If it sees spring-boot-starter-web, it automatically assumes we are building a web app and configures Tomcat and Spring MVC for you.

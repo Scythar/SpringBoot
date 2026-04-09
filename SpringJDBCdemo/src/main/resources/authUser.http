@@ -4,9 +4,9 @@ POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-  "username": "New",
-  "password": "not",
-  "role": "USER"
+  "username": "admin",
+  "password": "admin",
+  "role": "ADMIN"
 }
 
 ### Authenticate existing User
@@ -15,6 +15,6 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "username": "New",
-  "password": "not"
+  "username": "admin",
+  "password": "admin"
 }

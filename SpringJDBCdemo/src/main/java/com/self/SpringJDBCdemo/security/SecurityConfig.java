@@ -38,7 +38,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/auth/login",
-                                "/auth/register"
+                                "/auth/register",
+                                "/error",
+                                "/actuator/**"
                         ).permitAll()              // ✅ PUBLIC
                         .anyRequest().authenticated() // ✅ PROTECTED
                 )

@@ -40,6 +40,11 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
+
 
         <dependency>
 			<groupId>com.h2database</groupId>
@@ -112,7 +117,11 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>com.self.SpringJDBCdemo.SpringJdbcDemoApplication</mainClass>
+				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 

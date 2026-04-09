@@ -1,0 +1,17 @@
+###
+GET http://localhost:8080/actuator/prometheus
+
+###
+GET http://localhost:8080/actuator/metrics/http.server.requests
+
+### To see each endpoint separately:
+
+
+### Ping endpoint
+GET http://localhost:8080/actuator/metrics/http.server.requests?tag=uri:/order/ping&tag=method:GET
+
+### Login endpoint
+GET http://localhost:8080/actuator/metrics/http.server.requests?tag=uri:/auth/login&tag=method:POST
+
+### All metrics
+GET http://localhost:8080/actuator/metrics/http.server.requests
