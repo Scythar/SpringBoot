@@ -383,6 +383,38 @@ Microservices (validate JWT)
 DB
 
 <-------------------------------------------------------------------------------------------------------------->
-✅
+✅what is swagger?
+
+ANSWER:
+Swagger = API Documentation Tool
+
+Automatically generates interactive documentation
+for all your REST APIs
+
+Developers can:
+  → See all available endpoints
+  → See request/response structure
+  → Test APIs directly from browser
+  → No Postman needed ✅
+
+  New developer joins team:
+    → Open http://localhost:8080/swagger-ui.html
+    → See ALL APIs documented automatically ✅
+    → Test them directly in browser ✅
+    → Always up to date ✅
+
+    Step 1 — Add Dependency
+    <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        <version>2.3.0</version>
+    </dependency>
+
+    Step 2 — Access Swagger UI
+    Start Spring Boot app
+
+    Open browser:
+    http://localhost:8080/swagger-ui.html
+
 <-------------------------------------------------------------------------------------------------------------->
 ✅
