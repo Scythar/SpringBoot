@@ -109,6 +109,21 @@ View Resolver resolves it to
 Spring Boot (The Productivity Tool)
 Spring Boot is a module built on top of the Spring Framework that makes it easy to create standalone, production-ready applications with minimal configuration. It looks at the dependencies on your classpath. If it sees spring-boot-starter-web, it automatically assumes we are building a web app and configures Tomcat and Spring MVC for you.
 
++------------------+------------------+------------------+------------------+------------------+
+| Feature          | Spring           | Spring MVC       | Spring Boot      | Spring Security  |
++------------------+------------------+------------------+------------------+------------------+
+| Purpose          | Core DI/IoC      | Web layer        | Auto config      | Auth/Authz       |
++------------------+------------------+------------------+------------------+------------------+
+| XML config       | ✅ needed        | ✅ needed        | ❌ not needed    | ❌ not needed    |
++------------------+------------------+------------------+------------------+------------------+
+| Embedded server  | ❌               | ❌               | ✅ Tomcat        | ❌               |
++------------------+------------------+------------------+------------------+------------------+
+| Key annotation   | @Component       | @Controller      | @SpringBoot      | @EnableWeb       |
+|                  |                  |                  | Application      | Security         |
++------------------+------------------+------------------+------------------+------------------+
+| Handles          | Bean management  | HTTP requests    | Everything       | Security         |
++------------------+------------------+------------------+------------------+------------------+
+
 <-------------------------------------------------------------------------------------------------------------->
 ⭐ How traditional Spring handled the dependency injection?
 
