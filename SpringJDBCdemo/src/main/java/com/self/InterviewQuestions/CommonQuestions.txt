@@ -432,4 +432,17 @@ Developers can:
     http://localhost:8080/swagger-ui.html
 
 <-------------------------------------------------------------------------------------------------------------->
-✅
+✅ What is cron jobs, give few use cases where you can use cron jobs in your project?
+
+ANSWER:
+Cron jobs are scheduled tasks that run automatically at specified intervals or times.
+ They are commonly used for automating repetitive tasks in applications.
+Use Cases for Cron Jobs:
+1. Data Backup: Schedule regular backups of databases or files to ensure data safety.
+2. Email Notifications: Send out daily or weekly email reports, reminders, or newsletters.
+3. Cache Cleanup: Periodically clear expired cache entries to free up memory.
+4. Log Rotation: Rotate log files to prevent them from growing indefinitely and consuming disk space.
+5. Data Synchronization: Sync data between different systems or databases at regular intervals.
+6. Batch Processing: Process large volumes of data in batches during off-peak hours to reduce system load.
+7. System Maintenance: Perform routine maintenance tasks like clearing temporary files or optimizing databases.
+In Spring Boot, you can use the @Scheduled annotation to create cron jobs.
