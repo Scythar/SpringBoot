@@ -446,3 +446,17 @@ Use Cases for Cron Jobs:
 6. Batch Processing: Process large volumes of data in batches during off-peak hours to reduce system load.
 7. System Maintenance: Perform routine maintenance tasks like clearing temporary files or optimizing databases.
 In Spring Boot, you can use the @Scheduled annotation to create cron jobs.
+
+
+<-------------------------------------------------------------------------------------------------------------->
+✅ While developing a Spring Boot application, what things do you take care of?
+
+ANSWER:
+1. Project Structure: Follow layered architecture (controller, service, repository, entity) for maintainability and testability.
+2. Dependency Management: Use Spring Boot starters to manage dependencies and avoid version conflicts.
+3. API Design: Follow REST conventions — proper HTTP methods, status codes
+                Use DTOs — never expose entity directly to client
+                Validate input using @Valid, @NotNull, @Size
+
+4. Exception Handling: Global handler using @ControllerAdvice
+                Never return stack trace to client
