@@ -458,5 +458,8 @@ ANSWER:
                 Use DTOs — never expose entity directly to client
                 Validate input using @Valid, @NotNull, @Size
 
-4. Exception Handling: Global handler using @ControllerAdvice
+4. Exception Handling: Global handler using @RestControllerAdvice
                 Never return stack trace to client
+
+
+

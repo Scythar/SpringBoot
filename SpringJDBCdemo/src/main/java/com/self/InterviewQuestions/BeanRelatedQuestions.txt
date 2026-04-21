@@ -2,8 +2,6 @@
 ✅ what is bean conflict?  How to resolve bean conflicts in Spring Boot?
 
 ANSWER:
-A bean conflict happens when Spring's IoC container finds more than one bean of the same type and
-doesn't know which one to inject.
 
 // Two beans of same type — Spring is confused
 @Bean
@@ -12,13 +10,10 @@ public DataSource mysqlDataSource() { ... }
 @Bean
 public DataSource postgresDataSource() { ... }
 
-// Now when something asks for DataSource — which one?
 @Autowired
 DataSource dataSource;  // ❌ NoUniqueBeanDefinitionException
-```
 
 Spring throws:
-```
 NoUniqueBeanDefinitionException:
 
 Situation                              │ Solution
@@ -113,6 +108,19 @@ yaml# application.yml
 spring:
   profiles:
     active: dev     # simpleCacheManager is created, redisCacheManager is not
+
+
+<-------------------------------------------------------------------------------------------------------------->
+✅Can multiple classes with the same name exist in the same package? How can bean conflicts (same type) be resolved in Spring?
+
+ANSWER:
+
+| Scenario                                   | Result                              |
+|-------------------------------------------|-------------------------------------|
+| Same package, same name                   | Compilation Error ❌                |
+| Different package, same name              | Works fine ✅                      |
+| Both registered as Spring beans           | ConflictingBeanDefinitionException ❌ |
+
 
 
 

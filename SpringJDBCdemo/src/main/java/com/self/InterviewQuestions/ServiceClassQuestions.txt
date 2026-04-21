@@ -1,3 +1,9 @@
+✅ What @Transactional does
+
+ANSWER:
+Wraps method in a DB transaction — if anything fails, everything rolls back.
+
+<------------------------------------------------------------------------------------------------------------->
 ⭐ Optimistic vs Pessimistic Locking (JPA / Hibernate)
 
 ANSWER:
@@ -100,22 +106,6 @@ If any of these fail → everything rolls back.
 Because:
 If you run multiple SQL updates, they must belong to the same atomic block.
 You cannot start/commit a transaction after some SQL has already executed.
-
-🧠 Example timeline
-With @Transactional:
-[Spring] BEGIN
-   ↓
-execute method
-   ↓
-[Spring] COMMIT or ROLLBACK
-Without @Transactional:
-Every SQL executes independently:
-SQL1 committed immediately
-SQL2 committed immediately
-SQL3 committed immediately
-If SQL3 fails → SQL1 and SQL2 are already saved → ❌ inconsistent state.
-
-Generally @Transactional annotation is used only for DB update query methods in service class.
 
 <--------------------------------------------------------------------------------------------------------------------->
 QUESTION:
